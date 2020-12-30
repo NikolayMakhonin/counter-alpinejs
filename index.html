@@ -350,13 +350,13 @@
         $watch('timer.vibrateEnabled', function() { save() })
         $watch('timer.blinkEnabled', function() { save() })
         $watch('counter.sessions', function() { save() })
-        $watch('timer.started', function (started) {
-          counter.newSession()
-        })
         $watch('timer.onIntervalEnd', function (onIntervalEnd) {
           if (onIntervalEnd) {
 			counter.addValue()
 		  }
+        })
+        $watch('timer.started', function (started) {
+          counter.newSession()
         })
 
         setTimeout(function() {
