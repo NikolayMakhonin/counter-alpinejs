@@ -126,6 +126,7 @@
           vibrateEnabled: false,
           blinkEnabled: true,
           isBlink: false,
+		  onIntervalEnd: false,
           _sound: function () {
             if (this.soundEnabled) {
               // sounds.beep.pause()
@@ -177,14 +178,16 @@
             if (this.timeElapsed === 0) {
               this.stop()
               this.sound(3)
-			  $dispatch('interval-end', {})
+			  this.onIntervalEnd = false
+			  this.onIntervalEnd = true
 			  return
             }
 
             if (this.intervalElapsed === 0) {
               this.intervalElapsed = this.interval
               this.sound(1)
-			  $dispatch('interval-end', {})
+			  this.onIntervalEnd = false
+			  this.onIntervalEnd = true
             }
 
             this.timeElapsed -= 1000
@@ -349,13 +352,17 @@
         $watch('timer.started', function (started) {
           counter.newSession()
         })
+        $watch('timer.onIntervalEnd', function (onIntervalEnd) {
+          if (onIntervalEnd) {
+			counter.addValue()
+		  }
+        })
 
         setTimeout(function() {
           timer.started = !timer.started
           timer.started = !timer.started
         }, 1)
       }"
-	  @interval-end="counter.addValue()"
       >
       <div class="counter__header flex">
         <button class="flex-none m-1 h-9 w-9 button click-shift relative border border-black">
