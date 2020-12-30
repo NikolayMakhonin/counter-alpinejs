@@ -97,6 +97,22 @@ html, body {
 	touch-action: none !important; /* pan-x pan-y; */
 }
 
+html, body {
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	overscroll-behavior: none;
+	overflow: hidden;
+	pointer-events: none;
+	touch-action: none;
+}
+
+.counter {
+
+}
+
 /* body {
   background: url(https://bstatic.com/xdata/images/xphoto/1182x887/82877075.jpg?k=db9e00135b7b8f038aad88a7676235667ca249a5eed997a499677812fa332833&o=?size=S);
   background-size: 100% 100%;
