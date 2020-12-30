@@ -116,6 +116,14 @@
 	transform: translate(0.05em, 0.05em);
 }
 
+.click-invert:hover {
+	filter: invert(10%);
+}
+
+.click-invert:active {
+	filter: invert(15%);
+}
+
 label > :checked~.checked-invert {
 	filter: invert(15%);
 }

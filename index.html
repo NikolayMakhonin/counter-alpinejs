@@ -287,17 +287,17 @@
               time: Date.now(),
               value: value,
             })
-			sounds.click1.pause();
-			sounds.click1.currentTime = 0;
-			sounds.click1.play()
+			sounds.beep.pause();
+			sounds.beep.currentTime = 0;
+			sounds.beep.play()
           },
           undo: function() {
             if (this.sessions[0].log.length > 0) {
               this.sessions[0].log.shift()
             }
-			sounds.click2.pause();
-			sounds.click2.currentTime = 0;
-			sounds.click2.play()
+			sounds.beep.pause();
+			sounds.beep.currentTime = 0;
+			sounds.beep.play()
           },
         },
         save: function () {
@@ -358,19 +358,19 @@
       </div>
       <div class="counter__buttons flex justify-between">
         <button
-          class="button click-shift disabled-opacity m-1 w-24 h-24 relative border border-black"
+          class="button click-shift click-invert disabled-opacity m-1 w-24 h-24 relative border border-black"
           :disabled="!timer.started"
           x-on:click="counter.addValue(0); save()">
           <span class="icon icon-mask icon--numeric-0 bg-black">&nbsp;</span>&nbsp;
         </button>
         <button
-          class="button click-shift disabled-opacity m-1 w-24 h-24 relative border border-black"
+          class="button click-shift click-invert disabled-opacity m-1 w-24 h-24 relative border border-black"
           :disabled="!timer.started"
           x-on:click="counter.undo(); save()">
           <span class="icon icon-mask icon--undo bg-black">&nbsp;</span>&nbsp;
         </button>
         <button
-          class="button click-shift disabled-opacity m-1 w-24 h-24 relative border border-black"
+          class="button click-shift click-invert disabled-opacity m-1 w-24 h-24 relative border border-black"
           :disabled="!timer.started"
           x-on:click="counter.addValue(1); save()"
         >
