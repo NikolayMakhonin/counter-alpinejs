@@ -381,10 +381,10 @@
 					class="collapsed-focus"
 					:value="value"
 					x-model="counter.value"
+					:disabled="!timer.started"
 				/>
 				<div
 					class="button click-shift checked-invert disabled-opacity m-1 w-24 h-24 relative border border-black"
-					:disabled="!timer.started"
 					x-on:click="counter.value = value; save()">
 					<span
 						class="icon icon-mask bg-black"
