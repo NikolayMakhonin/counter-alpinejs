@@ -1,0 +1,70 @@
+.text {
+	line-height   : 1;
+	vertical-align: 0.016em;
+}
+
+.no-drag {
+	user-drag: none;
+	-webkit-user-drag: none;
+}
+
+.no-select {
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+}
+
+.no-wrap {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.no-wrap-2 {
+	-webkit-line-clamp: 2;
+}
+
+.no-wrap-2, .no-wrap-3 {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	max-height: NaNem;
+}
+
+.no-wrap-3 {
+	-webkit-line-clamp: 3;
+}
+
+.hidden {
+	visibility: hidden!important;
+}
+
+.collapsed {
+	display: none!important;
+}
+
+.collapsed-focus {
+	position: absolute!important;
+	opacity: 0!important;
+	pointer-events: none!important;
+	user-select: none!important;
+	width: 0!important;
+	height: 0!important;
+}
+
+.no-ghost-childs>* {
+	pointer-events: auto;
+	user-select: auto;
+}
+
+.ghost {
+	pointer-events: none!important;
+	user-select: none!important;
+}
+
+.no-ghost {
+	pointer-events: auto!important;
+	user-select: auto!important;
+}

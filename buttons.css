@@ -1,0 +1,133 @@
+.button {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	display: inline-flex;
+	width: auto;
+	background-color: #fff;
+	box-shadow: inset 0 0 0 1.5px transparent;
+	user-select: none;
+	cursor: pointer;
+	align-items: center;
+	justify-content: center;
+}
+
+
+.button:disabled {
+	/*opacity: 0.5;
+	filter: invert(5%);*/
+	pointer-events: none;
+}
+
+/*
+.button:hover {
+	opacity: 0.75;
+	filter: invert(15%);
+}
+
+.button:active {
+	opacity: 0.5;
+	filter: invert(20%);
+}
+*/
+
+/* :checked~.button {
+	opacity: 0.8;
+	filter: invert(10%);
+} */
+
+.button>* {
+	pointer-events: none;
+}
+
+.button>.icon-inline {
+	margin-top: 0;
+}
+
+.button-text {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	display: inline-block;
+	width: auto;
+	background-color: #fff;
+	box-shadow: inset 0 0 0 1.5px transparent;
+	user-select: none;
+	cursor: pointer;
+	align-items: center;
+	justify-content: center;
+	color: #000;
+	padding-left: 0.3em;
+	padding-right: 0.3em;
+}
+
+.button-text:disabled {
+/*	opacity: 0.5;
+	filter: invert(5%); */
+	pointer-events: none;
+}
+
+/* :checked~.button-text {
+	filter: invert(15%);
+}
+
+:checked~.button-text:hover {
+	filter: invert(15%);
+} */
+
+/* .button-text:hover {
+	filter: invert(10%);
+}
+
+.button-text:active {
+	filter: invert(15%);
+} */
+
+.button-text>* {
+	pointer-events: none;
+}
+
+.button-text:active, .button-text:hover, .button-text:link, .button-text:visited {
+	color: #000;
+}
+
+.button-text>icon-mask {
+	background-color: #000;
+}
+
+/* Behavior */
+
+.button:disabled, label > :disabled~.button,
+.button-text:disabled, label > :disabled~.button-text {
+	pointer-events: none;
+}
+
+.button:focus, label > :focus~.button,
+.button-text:focus, label > :focus~.button-text {
+	outline: 2px dotted;
+	outline: 2px auto -webkit-focus-ring-color;
+}
+
+.click-shift:hover {
+	transform: translate(-0.05em, -0.05em);
+}
+
+.click-shift:active {
+	transform: translate(0.05em, 0.05em);
+}
+
+label > :checked~.checked-invert {
+	filter: invert(15%);
+}
+
+label > :checked~.checked-invert:hover {
+	filter: invert(15%);
+}
+
+.disabled-opacity:disabled,
+label > :disabled~.disabled-opacity {
+	opacity: 0.5;
+	/* background: none; */
+	/* background-blend-mode: difference; */
+	/* backdrop-filter: contrast(0%); */
+}

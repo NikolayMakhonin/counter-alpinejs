@@ -1,0 +1,98 @@
+.icon {
+	position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  margin: auto;
+}
+
+.icon-block {
+  display: block;
+  width : 1em;
+  height: 1em;
+}
+
+.icon-inline {
+  display: inline-block;
+  width  : 1em;
+  height : 1em;
+
+  vertical-align: middle;
+	font-size     : 100% !important;
+  margin-top    : -0.223em;
+  white-space   : nowrap;
+
+  /* font clear */
+	font-family: Arial;
+	color: transparent;
+	text-transform: none;
+	text-rendering: auto;
+	text-size-adjust: initial;
+	letter-spacing: normal;
+	font-weight: 400;
+	-webkit-box-direction: initial;
+	-webkit-font-smoothing: initial;
+}
+
+.icon-mask {
+  -webkit-mask-position: center center;
+  -webkit-mask-position-x: center;
+  -webkit-mask-position-y: center;
+  mask-position: center center;
+  -webkit-mask-size: contain;
+  mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+
+.icon--menu {
+  -webkit-mask-image: url(icons/menu.svg);
+  mask-image: url(icons/menu.svg);
+}
+
+.icon--play {
+  -webkit-mask-image: url(icons/play.svg);
+  mask-image: url(icons/play.svg);
+}
+
+.icon--stop {
+  -webkit-mask-image: url(icons/stop.svg);
+  mask-image: url(icons/stop.svg);
+}
+
+.icon--undo {
+  -webkit-mask-image: url(icons/undo.svg);
+  mask-image: url(icons/undo.svg);
+  -webkit-mask-size: 70%;
+  mask-size: 70%;
+}
+
+.icon--numeric-0 {
+  -webkit-mask-image: url(icons/numeric-0.svg);
+  mask-image: url(icons/numeric-0.svg);
+}
+
+.icon--numeric-1 {
+  -webkit-mask-image: url(icons/numeric-1.svg);
+  mask-image: url(icons/numeric-1.svg);
+}
+
+.icon--volume-high {
+  -webkit-mask-image: url(icons/volume-high.svg);
+  mask-image: url(icons/volume-high.svg);
+}
+
+.counter {
+  transition: background-color 0.1s;
+}
+
+.blink {
+  background-color: lightgreen;
+}
+
+/* body {
+  background: url(https://bstatic.com/xdata/images/xphoto/1182x887/82877075.jpg?k=db9e00135b7b8f038aad88a7676235667ca249a5eed997a499677812fa332833&o=?size=S);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+} */

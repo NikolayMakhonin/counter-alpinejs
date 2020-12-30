@@ -1,0 +1,419 @@
+<!doctype html>
+
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0" name="viewport">
+		
+		<!-- region Error handling -->
+
+		<script>
+			'use strict';
+
+			(function initErrorHandler() {
+				function subscribeUnhandledErrors() {
+					// eslint-disable-next-line no-eval
+					var origEval = window.eval;
+					// eslint-disable-next-line no-eval
+					delete window.eval;
+					// eslint-disable-next-line no-eval,func-name-matching
+					window.eval = function _eval(str) {
+						if (str.indexOf('async function') >= 0) {
+							return origEval.call(window, str);
+						}
+
+						try {
+							return origEval.call(window, str);
+						} catch (ex) {
+							console.error(ex, str);
+							throw ex;
+						}
+					};
+
+					// function errorHandler(...args) {
+					// 	console.error('Unhandled rejection: ', ...args);
+					// }
+
+					function errorHandler() {
+						var len = arguments.length;
+						var args = new Array(len);
+
+						for (var i = 0; i < len; i++) {
+							var arg = arguments[i];
+							arg = (typeof PromiseRejectionEvent !== 'undefined'
+								? arg instanceof PromiseRejectionEvent && arg.reason
+								: arg.reason)
+								|| arg;
+
+							if (arg instanceof Error) {
+								var obj = {};
+								// eslint-disable-next-line guard-for-in
+								for (var key in arg) {
+									obj[key] = arg[key];
+								}
+								obj.origErrorObject = arg;
+								arg = obj;
+							}
+
+							args[i] = arg;
+						}
+
+						// eslint-disable-next-line prefer-spread
+						console.error.apply(console, ['Unhandled rejection: '].concat(args));
+						alert(['Unhandled rejection: '].concat(args))
+					}
+
+					window.addEventListener('unhandledrejection', errorHandler);
+
+					window.onunhandledrejection = errorHandler;
+
+					window.onerror = errorHandler;
+
+					return function unsubscribe() {
+						window.removeEventListener('unhandledrejection', errorHandler);
+						window.onunhandledrejection = null;
+						window.onerror = null;
+						// eslint-disable-next-line no-eval
+						window.eval = origEval;
+					};
+				}
+
+				window.unsubscribeUnhandledErrors = subscribeUnhandledErrors();
+			})();
+		</script>
+		
+		<!-- Alpine.js framework. Docs: https://github.com/alpinejs/alpine -->
+		<script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+
+		<script src="helpers.js"></script>
+
+		<link rel="stylesheet" href="reset.css">
+		<link rel="stylesheet" href="helpers.css">
+		<link rel="stylesheet" href="buttons.css">
+
+		<!-- Tailwind CSS framework. Docs: https://tailwindcss.com/docs/container -->
+		<link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+		
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+    <div
+      class="absolute inset-0 counter flex flex-col p-0.5 bg-white"
+      :class="{blink: timer.isBlink}"
+      x-data="{
+        timer: {
+          time: 120 * 1000,
+          interval: 2 * 1000,
+          timeElapsed: 120 * 1000,
+          intervalElapsed: 2 * 1000,
+          started: false,
+          soundEnabled: false,
+          vibrateEnabled: false,
+          blinkEnabled: true,
+          isBlink: false,
+          _sound: function () {
+            if (this.soundEnabled) {
+              beep.pause();
+              beep.currentTime = 0;
+              beep.play()
+            }
+            if (this.vibrateEnabled && navigator.vibrate) {
+              navigator.vibrate(50)
+            }
+            if (this.blinkEnabled) {
+              var _this = this
+              _this.isBlink = true
+              setTimeout(function() {
+                _this.isBlink = false
+              }, 100)
+            }
+          },
+          sound: function(count) {
+            if (count == null) {
+              count = 1
+            }
+
+            // for(i = 0; i < count; i++) {
+            //  this._sound()
+            //  await delay(100)
+            // }
+
+            var _this = this
+
+            function _recursive() {
+              if (i < count) {
+                return Promise.resolve().then(function () {
+                  _this._sound();
+                  return delay(200);
+                }).then(function () {
+                  i++;
+                  return _recursive();
+                });
+              }
+            }
+
+            return Promise.resolve().then(function () {
+              i = 0;
+              return _recursive();
+            }).then(function () {});
+          },
+          _timer: null,
+          _tick: function() {
+            if (this.intervalElapsed === 0) {
+              this.intervalElapsed = this.interval
+              this.sound(1)
+            }
+            this.intervalElapsed -= 1000
+
+            if (this.timeElapsed === 0) {
+              this.stop()
+              this.sound(3)
+            } else {
+              this.timeElapsed -= 1000
+            }
+          },
+          start: function() {
+            this.stop()
+
+            this.timeElapsed = this.time
+            this.intervalElapsed = 0
+
+            this.started = true
+
+            var _this = this
+            _this._tick()
+            this._timer = setInterval(function() {
+              _this._tick()
+            }, 1000)
+          },
+          stop: function() {
+            if (this._timer) {
+              clearInterval(this._timer)
+              this._timer = null
+            }
+
+            this.started = false
+          },
+          startStop: function() {
+            if (this.started) {
+              this.stop()
+            } else {
+              this.start()
+            }
+          },
+        },
+        counter: {
+          sessions: [{
+            log: [], // { time, value }
+          }],
+          sessionStat: function(session) {
+            if (!session) {
+              session = this.sessions[0]
+            }
+            var stat = session.log
+              .reduce(function(a, o) {
+                a[o.value] = (a[o.value] || 0) + 1
+                return a
+              }, {})
+            return stat
+          },
+          sessionReport: function() {
+            var stat = this.sessionStat()
+            var statStr = Object.keys(stat)
+              .map(function(value) {
+                return value + ': ' + stat[value]
+              })
+              .join('\n')
+            return statStr
+          },
+          sessionsStat: function() {
+            var _this = this
+            var stat = this.sessions
+              .filter(function(session) {
+                return session.log.length
+              })
+              .map(function(session) {
+                var time = session.log[session.log.length - 1].time
+                var _stat = _this.sessionStat(session)
+                var sum = 0
+                var count = 0
+                Object.keys(_stat)
+                  .forEach(function(value) {
+                    sum += value * _stat[value]
+                    count += _stat[value]
+                  })
+                return {
+                  time: time,
+                  sum: sum,
+                  count: count,
+                }
+              }, {})
+            return stat
+          },
+          sessionsReport: function() {
+            var statStr = this.sessionsStat()
+              .map(function(stat) {
+                return dateTimeToString(stat.time) + '\t' + stat.sum + '\t' + stat.count + '\t' + (stat.sum / stat.count * 100).toFixed(0) + '%'
+              })
+              .join('\n')
+            return statStr
+          },
+          newSession: function() {
+            if (this.sessions[0].log.length > 0) {
+              this.sessions.unshift({ log: [] })
+            }
+          },
+          addValue: function(value) {
+            this.sessions[0].log.unshift({
+              time: Date.now(),
+              value: value,
+            })
+          },
+          undo: function() {
+            if (this.sessions[0].log.length > 0) {
+              this.sessions[0].log.shift()
+            }
+          },
+        },
+        save: function () {
+          state = {
+            timer: {
+              time: this.timer.time,
+              interval: this.timer.interval,
+              soundEnabled: this.timer.soundEnabled,
+              vibrateEnabled: this.timer.vibrateEnabled,
+              blinkEnabled: this.timer.blinkEnabled,
+            },
+            counter: {
+              sessions: this.counter.sessions,
+            }
+          }
+
+          localStorage.setItem('state', JSON.stringify(state))
+
+          // this.timer.sound()
+        }
+      }"
+      x-init="function() {
+        var state = JSON.parse(localStorage.getItem('state') || '{}')
+        if (state.timer) {
+          timer.time = state.timer.time
+          timer.interval = state.timer.interval
+          timer.soundEnabled = state.timer.soundEnabled
+          timer.vibrateEnabled = state.timer.vibrateEnabled
+          timer.blinkEnabled = state.timer.blinkEnabled
+        }
+        if (state.counter) {
+          counter.sessions = state.counter.sessions
+        }
+
+        $watch('timer.time', function() { save() })
+        $watch('timer.interval', function() { save() })
+        $watch('timer.soundEnabled', function() { save() })
+        $watch('timer.vibrateEnabled', function() { save() })
+        $watch('timer.blinkEnabled', function() { save() })
+        $watch('counter.sessions', function() { save() })
+        $watch('timer.started', function (started) {
+          counter.newSession()
+        })
+
+        setTimeout(function() {
+          timer.started = !timer.started
+          timer.started = !timer.started
+        }, 1)
+      }"
+      >
+      <div class="counter__header flex">
+        <button class="flex-none m-1 h-9 w-9 button click-shift relative border border-black">
+          <span class="icon icon-mask icon--menu bg-black">&nbsp;</span>&nbsp;
+        </button>
+        <select class="flex-auto m-1 h-9 px-1.5 py-1 border border-black">
+          <option>Предвкушение</option>
+        </select>
+      </div>
+      <div class="counter__header timer flex">
+        <label class="no-select no-drag">
+          <input
+            type="checkbox"
+            class="collapsed-focus"
+            value="value"
+            x-model="timer.soundEnabled"
+          />
+          <div
+            class="flex-none m-1 h-9 w-9 button click-shift checked-invert relative border border-black"
+            >
+            <span
+              class="icon icon-mask icon--volume-high bg-black"
+              >&nbsp;</span>&nbsp;
+          </div>
+        </label>
+        <div
+          class="flex-auto m-1 h-9 px-1.5 py-1 border border-black bg-gray-200 font-bold"
+          :class="{'collapsed': !timer.started}"
+          x-text="timeToString(timer.timeElapsed)"
+        ></div>
+        <div
+          class="flex-auto m-1 h-9 px-1.5 py-1 border border-black bg-gray-200 font-bold"
+          :class="{'collapsed': !timer.started}"
+          x-text="timeToString(timer.intervalElapsed)"
+        ></div>
+        <select
+          class="flex-auto m-1 h-9 px-1.5 py-1 border border-black"
+          x-model="timer.time"
+          :class="{'collapsed': timer.started}"
+          >
+          <template x-for="value in [60, 120, 180, 240, 300, 600, 900, 1200, 1500, 1800, 2400, 3600, 5400, 7200, 14400, 10800, 21600, 25200, 28800, 32400, 36000, 39600, 43200, 46800, 50400, 54000, 57600]">
+            <option :value="value * 1000" x-text="timeToString(value * 1000)"></option>
+          </template>
+        </select>
+        <select
+          class="flex-auto m-1 h-9 px-1.5 py-1 border border-black"
+          x-model="timer.interval"
+          :class="{'collapsed': timer.started}">
+          <template x-for="value in [1, 2, 3, 4, 5, 10, 15, 20, 30, 40, 60, 120, 180, 240, 300, 600, 900, 1200, 1500, 1800, 2400, 3600, 5400, 7200]">
+            <option :value="value * 1000" x-text="timeToString(value * 1000)"></option>
+          </template>
+        </select>
+        <button
+          class="flex-none m-1 h-9 w-9 button click-shift checked-invert relative border border-black"
+          x-on:click="timer.startStop()"
+          :class="{'bg-gray-200': timer.started}"
+          >
+          <span
+            class="icon icon-mask bg-black"
+            :class="{
+              'icon--play': !timer.started,
+              'icon--stop': timer.started,
+            }"
+            >&nbsp;</span>&nbsp;
+        </button>
+      </div>
+      <div class="counter__content flex-auto slider flex flex-col">
+        <div class="flex-auto log flex flex-col m-1 px-1.5 py-0.5 border border-black">
+          <textarea class="flex-auto" :value="timer.started ? counter.sessionReport() : counter.sessionsReport()"></textarea>
+        </div>
+      </div>
+      <div class="counter__buttons flex justify-between">
+        <button
+          class="button click-shift disabled-opacity m-1 w-12 h-12 relative border border-black"
+          :disabled="!timer.started"
+          x-on:click="counter.addValue(0); save()">
+          <span class="icon icon-mask icon--numeric-0 bg-black">&nbsp;</span>&nbsp;
+        </button>
+        <button
+          class="button click-shift disabled-opacity m-1 w-12 h-12 relative border border-black"
+          :disabled="!timer.started"
+          x-on:click="counter.undo(); save()">
+          <span class="icon icon-mask icon--undo bg-black">&nbsp;</span>&nbsp;
+        </button>
+        <button
+          class="button click-shift disabled-opacity m-1 w-12 h-12 relative border border-black"
+          :disabled="!timer.started"
+          x-on:click="counter.addValue(1); save()"
+        >
+          <span class="icon icon-mask icon--numeric-1 bg-black">&nbsp;</span>&nbsp;
+        </button>
+      </div>
+    </div>
+	</body>
+</html>

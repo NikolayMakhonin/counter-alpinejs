@@ -1,0 +1,209 @@
+[type=button], [type=color], [type=reset], [type=submit], button {
+	align-items: normal;
+	background-color: transparent;
+	background-image: none;
+	box-sizing: inherit;
+	color: inherit;
+	cursor: auto;
+	display: inline-block;
+	vertical-align: middle;
+	font-style: inherit;
+	font-variant-ligatures: inherit;
+	font-variant-caps: inherit;
+	font-variant-numeric: inherit;
+	font-variant-east-asian: inherit;
+	font-weight: inherit;
+	font-stretch: inherit;
+	font-size: 100%;
+	line-height: inherit;
+	font-family: inherit;
+	letter-spacing: inherit;
+	margin: 0;
+	padding: 0;
+	text-align: start;
+	text-indent: 0;
+	text-rendering: inherit;
+	text-shadow: inherit;
+	text-transform: inherit;
+	-webkit-appearance: inherit;
+	-webkit-font-smoothing: inherit;
+	-webkit-writing-mode: inherit;
+	word-spacing: 0;
+	border: 0 solid #000;
+	-moz-appearance: inherit;
+	-moz-osx-font-smoothing: inherit;
+	-moz-user-select: inherit;
+	overflow-clip-box: inherit;
+	padding-block-end: 0;
+	padding-block-start: 0;
+	padding-inline-end: 0;
+	padding-inline-start: 0;
+	white-space: normal;
+	overflow: visible;
+	zoom: inherit;
+}
+
+[type=button]::-moz-focus-inner, [type=color]::-moz-focus-inner,
+[type=reset]::-moz-focus-inner, [type=submit]::-moz-focus-inner,
+button::-moz-focus-inner {
+	border: 0;
+	padding: 0;
+}
+
+[type=file]::-webkit-file-upload-button {
+	align-items: normal;
+	background-color: transparent;
+	background-image: none;
+	box-sizing: inherit;
+	color: inherit;
+	cursor: auto;
+	display: inline-block;
+	vertical-align: middle;
+	font-style: inherit;
+	font-variant-ligatures: inherit;
+	font-variant-caps: inherit;
+	font-variant-numeric: inherit;
+	font-variant-east-asian: inherit;
+	font-weight: inherit;
+	font-stretch: inherit;
+	font-size: 100%;
+	line-height: inherit;
+	font-family: inherit;
+	letter-spacing: inherit;
+	margin: 0;
+	padding: 0;
+	text-align: start;
+	text-indent: 0;
+	text-rendering: inherit;
+	text-shadow: inherit;
+	text-transform: inherit;
+	-webkit-appearance: inherit;
+	-webkit-font-smoothing: inherit;
+	-webkit-writing-mode: inherit;
+	word-spacing: 0;
+	border: 0 solid #000;
+	-moz-appearance: inherit;
+	-moz-osx-font-smoothing: inherit;
+	-moz-user-select: inherit;
+	overflow-clip-box: inherit;
+	padding-block-end: 0;
+	padding-block-start: 0;
+	padding-inline-end: 0;
+	padding-inline-start: 0;
+	white-space: normal;
+	overflow: visible;
+	zoom: inherit;
+}
+
+[type=email], [type=password], [type=text], select, textarea {
+	background-color: transparent;
+	background-image: none;
+	border: 0 solid #000;
+	box-sizing: inherit;
+	display: inline-block;
+	color: inherit;
+	vertical-align: middle;
+	font-style: inherit;
+	font-variant-ligatures: inherit;
+	font-variant-caps: inherit;
+	font-variant-numeric: inherit;
+	font-variant-east-asian: inherit;
+	font-weight: inherit;
+	font-stretch: inherit;
+	font-size: 100%;
+	line-height: inherit;
+	margin: 0;
+	padding: 0;
+	-webkit-appearance: none;
+}
+
+body, html {
+	-webkit-overflow-scrolling: touch;
+	-webkit-text-size-adjust: none;
+	position: fixed;
+	left: 0;
+	right: 0;
+	top: 0;
+	bottom: 0;
+	overscroll-behavior: none;
+	overflow: hidden;
+	background: transparent;
+}
+
+body {
+	font-family: Roboto,
+                 -apple-system,
+                 BlinkMacSystemFont,
+                 Segoe UI,
+                 Oxygen,
+                 Ubuntu,
+                 Cantarell,
+                 Fira Sans,
+                 Droid Sans,
+                 Helvetica Neue,
+                 sans-serif;
+}
+
+td {
+	vertical-align: middle;
+}
+
+th {
+	text-align: left;
+}
+
+ul {
+	margin: initial;
+}
+
+button {
+	position: relative;
+	font-size: inherit;
+}
+
+*, :after, :before {
+	background-repeat: no-repeat;
+	background-position: 50%;
+	background-size: contain;
+	mask-repeat: no-repeat;
+	mask-position: center;
+	mask-size: contain;
+	box-sizing: border-box;
+	vertical-align: middle;
+}
+
+:focus {
+	outline: none;
+}
+
+a {
+	text-decoration: inherit;
+	user-select: none;
+	-moz-user-select: none;
+	-webkit-user-select: none;
+	-ms-user-select: none;
+	user-drag: none;
+	-webkit-user-drag: none;
+}
+
+a, a:active, a:hover, a:link, a:visited {
+	color: inherit;
+}
+
+button {
+	white-space: nowrap;
+}
+
+td {
+	padding: 0;
+}
+
+table {
+	border-spacing: 0;
+}
+
+main {
+	text-rendering: optimizeSpeed;
+	-webkit-font-smoothing: none;
+	user-select: none;
+}

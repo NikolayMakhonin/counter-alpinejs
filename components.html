@@ -1,0 +1,189 @@
+<!doctype html>
+
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<meta content="width=device-width,initial-scale=1.0,minimum-scale=1.0" name="viewport">
+		
+		<!-- Alpine.js framework. Docs: https://github.com/alpinejs/alpine -->
+		<script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+
+		<link rel="stylesheet" href="reset.css">
+		<link rel="stylesheet" href="helpers.css">
+		<link rel="stylesheet" href="buttons.css">
+
+		<!-- Tailwind CSS framework. Docs: https://tailwindcss.com/docs/container -->
+		<link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+		
+		<link rel="stylesheet" href="style.css">
+	</head>
+	<body>
+		<br>button:<br>
+
+    <button class="w-12 h-12 relative border border-black">
+      <span class="icon icon-mask icon--menu bg-black">&nbsp;</span>&nbsp;
+    </button>
+
+    <div class="inline-block w-12 h-12 relative border border-black">
+      <span class="icon icon-mask icon--menu bg-black">&nbsp;</span>&nbsp;
+    </div>
+
+    <a class="inline-block w-12 h-12 relative border border-black">
+      <span class="icon icon-mask icon--menu bg-black">&nbsp;</span>&nbsp;
+    </a>
+
+    <button class="px-1.5 py-1 relative border border-black">
+      <span class="icon-inline icon-mask icon--menu bg-black">&nbsp;</span><span class="text">&nbsp;button</span>:
+    </button>
+
+		<div class="inline-block px-1.5 py-1 relative border border-black">
+      <span class="icon-inline icon-mask icon--menu bg-black">&nbsp;</span><span class="text">&nbsp;div</span>:
+		</div>
+
+		<a class="inline-block px-1.5 py-1 relative border border-black">
+      <span class="icon-inline icon-mask icon--menu bg-black">&nbsp;</span><span class="text">&nbsp;a</span>:
+		</a>
+
+		<input class="px-1.5 py-1 relative border border-black" type="submit" value="button"
+		></input>
+
+		<br>.button-text:<br>
+
+    <button class="button-text w-12 h-12 relative border border-black">
+      <span class="icon icon-mask icon--menu bg-black">&nbsp;</span>&nbsp;
+    </button>
+
+    <div class="button-text w-12 h-12 relative border border-black">
+      <span class="icon icon-mask icon--menu bg-black">&nbsp;</span>&nbsp;
+    </div>
+
+    <a class="button-text w-12 h-12 relative border border-black">
+      <span class="icon icon-mask icon--menu bg-black">&nbsp;</span>&nbsp;
+    </a>
+
+    <button class="button-text px-1.5 py-1 relative border border-black" disabled>
+      <span class="icon-inline icon-mask icon--menu bg-black">&nbsp;</span><span class="text">&nbsp;button</span>:
+    </button>
+
+		<div class="button-text px-1.5 py-1 relative border border-black">
+      <span class="icon-inline icon-mask icon--menu bg-black">&nbsp;</span><span class="text">&nbsp;div</span>:
+		</div>
+
+		<a class="button-text px-1.5 py-1 relative border border-black">
+      <span class="icon-inline icon-mask icon--menu bg-black">&nbsp;</span><span class="text">&nbsp;a</span>:
+		</a>
+
+		<input class="button-text px-1.5 py-1 relative border border-black" type="submit" value="button"
+		></input>
+
+		<br>.button:<br>
+
+    <button class="button w-12 h-12 relative border border-black">
+      <span class="icon icon-mask icon--menu bg-black">&nbsp;</span>&nbsp;
+    </button>
+
+    <div class="button w-12 h-12 relative border border-black">
+      <span class="icon icon-mask icon--menu bg-black">&nbsp;</span>&nbsp;
+    </div>
+
+    <a class="button w-12 h-12 relative border border-black">
+      <span class="icon icon-mask icon--menu bg-black">&nbsp;</span>&nbsp;
+    </a>
+
+    <button class="button px-1.5 py-1 relative border border-black">
+      <span class="icon-block icon-mask icon--menu bg-black">&nbsp;</span><span class="text">&nbsp;button</span>
+    </button>
+
+		<div class="button px-1.5 py-1 relative border border-black">
+      <span class="icon-inline icon-mask icon--menu bg-black">&nbsp;</span><span class="text">&nbsp;div</span>
+		</div>
+
+		<a class="button px-1.5 py-1 relative border border-black">
+      <span class="icon-inline icon-mask icon--menu bg-black">&nbsp;</span><span class="text">&nbsp;a</span>
+		</a>
+
+		<input class="button button-click-base px-1.5 py-1 relative border border-black" type="submit" value="button"
+		></input>
+
+		<br>input:<br>
+
+		<textarea class="inline-block px-1.5 py-1 relative border border-black">textarea</textarea>
+
+		<input class="px-1.5 py-1 relative border border-black" type="text" value="text"
+		></input>
+
+		<label class="no-select no-drag">
+			<input
+				type="radio"
+				class="collapsed"
+				group="group"
+				value="value"
+			/>
+			<div class="button-text click-shift checked-invert disabled-opacity inline-block px-1.5 py-1 relative border border-black">radio</div>
+		</label>
+
+		<label class="no-select no-drag">
+			<input
+				type="checkbox"
+				class="collapsed-focus"
+				value="value"
+				checked=true
+				disabled=true
+			/>
+			<div class="button-text click-shift checked-invert disabled-opacity inline-block px-1.5 py-1 relative border border-black">checkbox</div>
+		</label>
+
+		<div class="inline-block px-1.5 py-1 relative border border-black">div</div>
+
+		<br>
+		<br>
+
+		<label class="no-select no-drag">
+			<input
+				type="checkbox"
+				class="collapsed-focus"
+				value="value"
+			/>
+			<div class="button-text click-shift checked-invert disabled-opacity inline-block px-1.5 py-1 relative border border-black">checkbox</div>
+		</label>
+
+		<label class="no-select no-drag">
+			<input
+				type="checkbox"
+				class="collapsed-focus"
+				value="value"
+				disabled=true
+			/>
+			<div class="button-text click-shift checked-invert disabled-opacity inline-block px-1.5 py-1 relative border border-black">checkbox</div>
+		</label>
+
+		<label class="no-select no-drag">
+			<input
+				type="checkbox"
+				class="collapsed-focus"
+				value="value"
+				checked=true
+			/>
+			<div class="button-text click-shift checked-invert disabled-opacity inline-block px-1.5 py-1 relative border border-black">checkbox</div>
+		</label>
+
+		<label class="no-select no-drag">
+			<input
+				type="checkbox"
+				class="collapsed-focus"
+				value="value"
+				checked=true
+				disabled=true
+			/>
+			<div class="button-text click-shift checked-invert disabled-opacity inline-block px-1.5 py-1 relative border border-black">checkbox</div>
+		</label>
+
+		<br>select:<br>
+
+		<select class="button-text click-shift disabled-opacity inline-block px-1.5 py-1 relative border border-black">
+			<option>00:05</option>
+			<option>00:15</option>
+		</select>
+
+	</body>
+</html>
