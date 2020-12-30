@@ -300,7 +300,7 @@
 		  value: null,
           addValue: function(value) {
 			if (value == null) {
-				value = this.value || 0
+				value = this.value && parseInt(this.value) || 0
 				this.value = null
 			}
             this.sessions[0].log.unshift({
@@ -364,6 +364,7 @@
         $watch('timer.onIntervalEnd', function (onIntervalEnd) {
           if (onIntervalEnd) {
 			counter.addValue()
+			save()
 		  }
         })
 
@@ -393,8 +394,7 @@
 					:disabled="!timer.started"
 				/>
 				<div
-					class="button click-shift checked-invert disabled-opacity m-1 w-24 h-24 relative border border-black"
-					x-on:click="counter.value = parseInt(value); save()">
+					class="button click-shift checked-invert disabled-opacity m-1 w-24 h-24 relative border border-black">
 					<span
 						class="icon icon-mask bg-black"
 						:class="{['icon--numeric-' + value]: true}"
