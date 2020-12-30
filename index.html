@@ -290,7 +290,11 @@
           },
           newSession: function() {
             if (this.sessions[0].log.length > 0) {
-              this.sessions.unshift({ log: [] })
+				if (this.sessions[0].log.length === 1 && !this.sessions[0].log[0].value) {
+					this.sessions[0].log.length = 0
+				} else {
+					this.sessions.unshift({ log: [] })			
+				}
             }
           },
 		  value: null,
