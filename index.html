@@ -178,8 +178,6 @@
             if (this.timeElapsed === 0) {
               this.stop()
               this.sound(3)
-			  this.onIntervalEnd = false
-			  this.onIntervalEnd = true
 			  return
             }
 
@@ -216,6 +214,9 @@
             }
 
             this.started = false
+			
+			this.onIntervalEnd = false
+			this.onIntervalEnd = true
 			
 			noSleep.disable()
           },
