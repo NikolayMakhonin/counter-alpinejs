@@ -174,18 +174,21 @@
           },
           _timer: null,
           _tick: function() {
-            if (this.intervalElapsed === 0) {
-              this.intervalElapsed = this.interval
-              this.sound(1)
-            }
-            this.intervalElapsed -= 1000
-
             if (this.timeElapsed === 0) {
               this.stop()
               this.sound(3)
-            } else {
-              this.timeElapsed -= 1000
+			  $dispatch('interval-end', {})
+			  return
             }
+
+            if (this.intervalElapsed === 0) {
+              this.intervalElapsed = this.interval
+              this.sound(1)
+			  $dispatch('interval-end', {})
+            }
+
+            this.timeElapsed -= 1000
+            this.intervalElapsed -= 1000
           },
           start: function() {
             this.stop()
@@ -282,7 +285,12 @@
               this.sessions.unshift({ log: [] })
             }
           },
+		  value: null,
           addValue: function(value) {
+			if (value == null) {
+				value = this.value || 0
+				this.value = null
+			}
             this.sessions[0].log.unshift({
               time: Date.now(),
               value: value,
@@ -347,6 +355,7 @@
           timer.started = !timer.started
         }, 1)
       }"
+	  @interval-end="counter.addValue()"
       >
       <div class="counter__header flex">
         <button class="flex-none m-1 h-9 w-9 button click-shift relative border border-black">
@@ -357,25 +366,26 @@
         </select>
       </div>
       <div class="counter__buttons flex justify-between">
-        <button
-          class="button click-shift click-invert disabled-opacity m-1 w-24 h-24 relative border border-black"
-          :disabled="!timer.started"
-          x-on:click="counter.addValue(0); save()">
-          <span class="icon icon-mask icon--numeric-0 bg-black">&nbsp;</span>&nbsp;
-        </button>
-        <button
-          class="button click-shift click-invert disabled-opacity m-1 w-24 h-24 relative border border-black"
-          :disabled="!timer.started"
-          x-on:click="counter.undo(); save()">
-          <span class="icon icon-mask icon--undo bg-black">&nbsp;</span>&nbsp;
-        </button>
-        <button
-          class="button click-shift click-invert disabled-opacity m-1 w-24 h-24 relative border border-black"
-          :disabled="!timer.started"
-          x-on:click="counter.addValue(1); save()"
-        >
-          <span class="icon icon-mask icon--numeric-1 bg-black">&nbsp;</span>&nbsp;
-        </button>
+		<template x-for="value in [0, 1]">
+			<label class="no-select no-drag">
+				<input
+					type="radio"
+					group="value"
+					class="collapsed-focus"
+					:value="value"
+					x-model="counter.value"
+				/>
+				<div
+					class="button click-shift checked-invert disabled-opacity m-1 w-24 h-24 relative border border-black"
+					:disabled="!timer.started"
+					x-on:click="counter.value = value; save()">
+					<span
+						class="icon icon-mask bg-black"
+						:class="{['icon--numeric-' + value]: true}"
+						>&nbsp;</span>&nbsp;
+				</div>
+			</label>
+		</template>
       </div>
       <div class="counter__header timer flex">
         <label class="no-select no-drag">
