@@ -343,6 +343,27 @@
           <option>Предвкушение</option>
         </select>
       </div>
+      <div class="counter__buttons flex justify-between">
+        <button
+          class="button click-shift disabled-opacity m-1 w-24 h-24 relative border border-black"
+          :disabled="!timer.started"
+          x-on:click="counter.addValue(0); save()">
+          <span class="icon icon-mask icon--numeric-0 bg-black">&nbsp;</span>&nbsp;
+        </button>
+        <button
+          class="button click-shift disabled-opacity m-1 w-24 h-24 relative border border-black"
+          :disabled="!timer.started"
+          x-on:click="counter.undo(); save()">
+          <span class="icon icon-mask icon--undo bg-black">&nbsp;</span>&nbsp;
+        </button>
+        <button
+          class="button click-shift disabled-opacity m-1 w-24 h-24 relative border border-black"
+          :disabled="!timer.started"
+          x-on:click="counter.addValue(1); save()"
+        >
+          <span class="icon icon-mask icon--numeric-1 bg-black">&nbsp;</span>&nbsp;
+        </button>
+      </div>
       <div class="counter__header timer flex">
         <label class="no-select no-drag">
           <input
@@ -405,27 +426,6 @@
           <textarea class="flex-auto" :value="timer.started ? counter.sessionReport() : counter.sessionsReport()"></textarea>
         </div>
       </div>
-      <div class="counter__buttons flex justify-between">
-        <button
-          class="button click-shift disabled-opacity m-1 w-24 h-24 relative border border-black"
-          :disabled="!timer.started"
-          x-on:click="counter.addValue(0); save()">
-          <span class="icon icon-mask icon--numeric-0 bg-black">&nbsp;</span>&nbsp;
-        </button>
-        <button
-          class="button click-shift disabled-opacity m-1 w-24 h-24 relative border border-black"
-          :disabled="!timer.started"
-          x-on:click="counter.undo(); save()">
-          <span class="icon icon-mask icon--undo bg-black">&nbsp;</span>&nbsp;
-        </button>
-        <button
-          class="button click-shift disabled-opacity m-1 w-24 h-24 relative border border-black"
-          :disabled="!timer.started"
-          x-on:click="counter.addValue(1); save()"
-        >
-          <span class="icon icon-mask icon--numeric-1 bg-black">&nbsp;</span>&nbsp;
-        </button>
-      </div>
     </div>
-	</body>
+</body>
 </html>
