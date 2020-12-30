@@ -394,7 +394,7 @@
 				/>
 				<div
 					class="button click-shift checked-invert disabled-opacity m-1 w-24 h-24 relative border border-black"
-					x-on:click="counter.value = value; save()">
+					x-on:click="counter.value = parseInt(value); save()">
 					<span
 						class="icon icon-mask bg-black"
 						:class="{['icon--numeric-' + value]: true}"
