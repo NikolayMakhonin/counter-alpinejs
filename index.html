@@ -95,6 +95,18 @@
 		<link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
 		
 		<link rel="stylesheet" href="style.css">
+
+		<script>
+			'use strict';
+
+			// region Disable zoom
+
+			document.addEventListener('gesturestart', function gesturestart(e) {
+				e.preventDefault();
+			});
+
+			// endregion
+		</script>
 	</head>
 	<body>
     <div
