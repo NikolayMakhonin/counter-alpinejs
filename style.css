@@ -110,7 +110,8 @@ html, body {
 }
 
 .counter {
-
+	pointer-events: auto;
+	touch-action: auto;
 }
 
 /* body {
