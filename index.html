@@ -86,6 +86,7 @@
 		<script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
 
 		<script src="helpers.js"></script>
+		<script src="lib/NoSleep.min.js"></script>
 
 		<link rel="stylesheet" href="reset.css">
 		<link rel="stylesheet" href="helpers.css">
@@ -192,6 +193,8 @@
 
             this.started = true
 
+			noSleep.enable()
+			
             var _this = this
             _this._tick()
             this._timer = setInterval(function() {
@@ -205,6 +208,8 @@
             }
 
             this.started = false
+			
+			noSleep.disable()
           },
           startStop: function() {
             if (this.started) {
