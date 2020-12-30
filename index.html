@@ -215,8 +215,10 @@
               this._timer = null
             }
 
-			this.onIntervalEnd = false
-			this.onIntervalEnd = true
+			if (this.started) {
+				this.onIntervalEnd = false
+				this.onIntervalEnd = true
+			}
 			
             this.started = false
 			
