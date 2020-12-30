@@ -287,17 +287,21 @@
               time: Date.now(),
               value: value,
             })
-			sounds.beep.pause();
-			sounds.beep.currentTime = 0;
-			sounds.beep.play()
+			if (this.soundEnabled) {
+				sounds.click1.pause()
+				sounds.click1.currentTime = 0
+				sounds.click1.play()
+			}
           },
           undo: function() {
             if (this.sessions[0].log.length > 0) {
               this.sessions[0].log.shift()
             }
-			sounds.beep.pause();
-			sounds.beep.currentTime = 0;
-			sounds.beep.play()
+			if (this.soundEnabled) {
+				sounds.click2.pause()
+				sounds.click2.currentTime = 0
+				sounds.click2.play()
+			}
           },
         },
         save: function () {
