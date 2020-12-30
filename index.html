@@ -174,18 +174,20 @@
             }).then(function () {});
           },
           _timer: null,
-          _tick: function() {
-            if (this.timeElapsed === 0) {
+          _tick: function(first) {
+            if (this.timeElapsed <= 0) {
               this.stop()
               this.sound(3)
 			  return
             }
 
-            if (this.intervalElapsed === 0) {
+            if (this.intervalElapsed <= 0) {
               this.intervalElapsed = this.interval
               this.sound(1)
-			  this.onIntervalEnd = false
-			  this.onIntervalEnd = true
+			  if (!first) {
+				  this.onIntervalEnd = false
+				  this.onIntervalEnd = true
+			  }
             }
 
             this.timeElapsed -= 1000
@@ -202,9 +204,9 @@
 			noSleep.enable()
 			
             var _this = this
-            _this._tick()
+            _this._tick(true)
             this._timer = setInterval(function() {
-              _this._tick()
+              _this._tick(false)
             }, 1000)
           },
           stop: function() {
