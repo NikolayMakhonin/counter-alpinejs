@@ -149,9 +149,7 @@
 		  onIntervalEnd: false,
           _sound: function () {
             if (this.soundEnabled) {
-              // sounds.beep.pause()
-              // sounds.beep.currentTime = 0
-              sounds.beep.play()
+              beep(100, 440, 80)
             }
             if (this.vibrateEnabled && navigator.vibrate) {
               navigator.vibrate(50)
@@ -328,7 +326,7 @@
               value: value,
             })
 			if (this.soundEnabled) {
-				sounds.click1.play()
+				beep(100, 523.2511306, 80)
 			}
           },
           undo: function() {
@@ -336,7 +334,7 @@
               this.sessions[0].log.shift()
             }
 			if (this.soundEnabled) {
-				sounds.click2.play()
+				beep(100, 523.2511306, 80)
 			}
           },
         },
