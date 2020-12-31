@@ -100,7 +100,7 @@ html, body {
 button, input, label {
 	/* Disable zoom */
 	touch-action: none!important;
-}
+
 
 html, body {
 	position: fixed;

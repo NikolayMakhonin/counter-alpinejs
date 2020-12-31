@@ -114,7 +114,10 @@
 			
 			// region Disable zoom
 
-			document.addEventListener('gesturestart', function gesturestart(e) {
+			document.addEventListener('gesturestart', function(e) {
+				e.preventDefault();
+			});
+			document.addEventListener('touchstart', function(e) {
 				e.preventDefault();
 			});
 
