@@ -118,7 +118,9 @@
 				e.preventDefault();
 			});
 			document.addEventListener('touchstart', function(e) {
-				if (e.target.disabled) {
+				if (e.target.disabled || e.target.tagName === 'LABEL' && e.target.children && e.target.children.some(function(o) {
+					return o.diabled
+				})) {
 					e.preventDefault();
 				}
 			});
