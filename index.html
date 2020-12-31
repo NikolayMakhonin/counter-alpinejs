@@ -10,8 +10,6 @@
 		<!-- PWA -->
 		<base href="/" />
 		<link rel="manifest" href="manifest.json" />
-		
-		<script src="service-worker-register.js"></script>
 
 		<!-- region Error handling -->
 
@@ -89,6 +87,10 @@
 				window.unsubscribeUnhandledErrors = subscribeUnhandledErrors();
 			})();
 		</script>
+
+		<!-- endregion -->
+	
+		<script src="service-worker-register.js"></script>
 		
 		<!-- Alpine.js framework. Docs: https://github.com/alpinejs/alpine -->
 		<script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
