@@ -69,6 +69,6 @@
 	user-select: auto!important;
 }
 
-:disabled, label :disabled ~ * {
+:disabled, label > :disabled ~ *, label {
 	touch-action: none!important;
 }
