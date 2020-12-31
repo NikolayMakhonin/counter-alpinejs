@@ -129,8 +129,8 @@
         timer: {
           time: 120 * 1000,
           interval: 2 * 1000,
-          timeElapsed: 120 * 1000,
-          intervalElapsed: 2 * 1000,
+          timeRemaining: 120 * 1000,
+          intervalRemaining: 2 * 1000,
           started: false,
           soundEnabled: false,
           vibrateEnabled: false,
@@ -185,14 +185,14 @@
           },
           _timer: null,
           _tick: function(first) {
-            if (this.timeElapsed <= 0) {
+            if (this.timeRemaining <= 0) {
               this.stop()
               this.sound(3)
 			  return
             }
 
-            if (this.intervalElapsed <= 0) {
-              this.intervalElapsed = this.interval
+            if (this.intervalRemaining <= 0) {
+              this.intervalRemaining = this.interval
               this.sound(1)
 			  if (!first) {
 				  this.onIntervalEnd = false
@@ -200,14 +200,14 @@
 			  }
             }
 
-            this.timeElapsed -= 1000
-            this.intervalElapsed -= 1000
+            this.timeRemaining -= 1000
+            this.intervalRemaining -= 1000
           },
           start: function() {
             this.stop()
 
-            this.timeElapsed = this.time
-            this.intervalElapsed = 0
+            this.timeRemaining = this.time
+            this.intervalRemaining = 0
 
             this.started = true
 
@@ -401,7 +401,7 @@
 					class="collapsed-focus"
 					:value="value"
 					x-model="counter.value"
-					:disabled="!timer.started"
+					:disabled="!timer.started || timer.interval - timer.intervalRemaining >= 2000"
 				/>
 				<div
 					class="button click-shift checked-invert disabled-opacity m-1 w-24 h-24 relative border border-black">
@@ -432,12 +432,12 @@
         <div
           class="flex-1 m-1 h-9 px-1.5 py-1 border border-black bg-gray-200 font-bold"
           :class="{'collapsed': !timer.started}"
-          x-text="timeToString(timer.timeElapsed)"
+          x-text="timeToString(timer.timeRemaining)"
         ></div>
         <div
           class="flex-1 m-1 h-9 px-1.5 py-1 border border-black bg-gray-200 font-bold"
           :class="{'collapsed': !timer.started}"
-          x-text="timeToString(timer.intervalElapsed)"
+          x-text="timeToString(timer.intervalRemaining)"
         ></div>
         <select
           class="flex-1 m-1 h-9 px-1.5 py-1 border border-black"
