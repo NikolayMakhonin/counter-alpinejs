@@ -70,5 +70,5 @@
 }
 
 :disabled, label :disabled ~ * {
-	pointer-events: none!important;
+	touch-action: none!important;
 }
