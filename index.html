@@ -325,17 +325,11 @@
               time: Date.now(),
               value: value,
             })
-			if (this.soundEnabled) {
-				beep(100, 523.2511306, 80)
-			}
           },
           undo: function() {
             if (this.sessions[0].log.length > 0) {
               this.sessions[0].log.shift()
             }
-			if (this.soundEnabled) {
-				beep(100, 523.2511306, 80)
-			}
           },
         },
         save: function () {
@@ -410,8 +404,8 @@
 					:value="value"
 					x-model="counter.value"
 					:disabled="!timer.started || timer.interval - timer.intervalRemaining < 3000"
-					x-on:mousedown="counter.value = value"
-					x-on:touchstart="counter.value = value"
+					x-on:mousedown="counter.value = value; if (timer.soundEnabled) { beep(100, 523.2511306, 80) }"
+					x-on:touchstart="counter.value = value; if (timer.soundEnabled) { beep(100, 523.2511306, 80) }"
 				/>
 				<div
 					class="button click-shift checked-invert disabled-opacity m-1 w-24 h-24 relative border border-black">
