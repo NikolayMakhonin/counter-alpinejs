@@ -68,7 +68,3 @@
 	pointer-events: auto!important;
 	user-select: auto!important;
 }
-
-:disabled, label > :disabled ~ *, label {
-	touch-action: none!important;
-}

@@ -97,6 +97,11 @@ html, body {
 	touch-action: none !important; /* pan-x pan-y; */
 }
 
+button, input, label {
+	/* Disable zoom */
+	touch-action: manipulation!important;
+}
+
 html, body {
 	position: fixed;
 	left: 0;
