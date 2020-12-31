@@ -65,7 +65,7 @@ var sounds = {
 }
 
 var beep = (function() {
-	if (!AudioContext) {
+	if (!typeof AudioContext === 'undefined') {
 		return function() {
 			sounds.beep.play()
 		}
