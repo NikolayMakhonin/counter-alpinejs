@@ -43,7 +43,7 @@ const assets = [
 var catchLog = function(promise) {
 	if (promise instanceof Promise) {
 		return promise.catch(err => {
-			console.error(err)
+			console.error({ error: err })
 			throw err
 		})
 	}
