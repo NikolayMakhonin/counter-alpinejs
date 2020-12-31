@@ -65,14 +65,14 @@ var sounds = {
 }
 
 var beep = (function() {
-	if (!windows.AudioContext) {
+	if (!window.AudioContext) {
 		return function() {
 			sounds.beep.play()
 		}
 	}
 
 	// from: https://stackoverflow.com/a/49077414/5221762
-	var audioContext = new windows.AudioContext()
+	var audioContext = new window.AudioContext()
 	return function beep(gain, frequency, duration){
 		console.log("Gain:" + gain, "Hz:" + frequency, "ms:" + duration)
 		oscillatorNode = audioContext.createOscillator()
