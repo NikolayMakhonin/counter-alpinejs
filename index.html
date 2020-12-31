@@ -411,7 +411,7 @@
 					class="collapsed-focus"
 					:value="value"
 					x-model="counter.value"
-					:disabled="!timer.started || timer.interval - timer.intervalRemaining >= 2000"
+					:disabled="!timer.started || timer.interval - timer.intervalRemaining < 2000"
 				/>
 				<div
 					class="button click-shift checked-invert disabled-opacity m-1 w-24 h-24 relative border border-black">
