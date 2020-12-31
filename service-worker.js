@@ -8,9 +8,9 @@ const assets = [
 	"/assets",
 	"/buttons.css",
 	"/components.html",
+	"/favicon.ico",
 	"/helpers.css",
 	"/helpers.js",
-	"/icons",
 	"/index.html",
 	"/layout.css",
 	"/lib",
@@ -19,6 +19,7 @@ const assets = [
 	"/normalize.css",
 	"/ReadMe.md",
 	"/reset.css",
+	"/service-worker-register.js",
 	"/service-worker.js",
 	"/style.css",
 	"/styles.js",
@@ -26,9 +27,6 @@ const assets = [
 	"/assets/sounds",
 	"/assets/icons/logo-192.png",
 	"/assets/icons/logo-512.png",
-	"/assets/sounds/click-1.mp3",
-	"/assets/sounds/click-2.mp3",
-	"/assets/sounds/click-3.mp3",
 	"/assets/icons/menu.svg",
 	"/assets/icons/numeric-0.svg",
 	"/assets/icons/numeric-1.svg",
@@ -36,8 +34,10 @@ const assets = [
 	"/assets/icons/stop.svg",
 	"/assets/icons/undo.svg",
 	"/assets/icons/volume-high.svg",
-	"/lib/NoSleep.min.js",
-	"/service-worker-index.html"
+	"/assets/sounds/click-1.mp3",
+	"/assets/sounds/click-2.mp3",
+	"/assets/sounds/click-3.mp3",
+	"/lib/NoSleep.min.js"
 ]
 
 self.addEventListener("install", installEvent => {
@@ -104,23 +104,23 @@ var files = [
 var shell = []
 
 // var routes = [
-	// { pattern: /^\/$/ },
-	// { pattern: /^\/main\/?$/ },
-	// { pattern: /^\/main\/tailwind\/?$/ },
-	// { pattern: /^\/dev\/?$/ },
-	// { pattern: /^\/dev\/components\/?$/ },
-	// { pattern: /^\/dev\/components\/medium\/dropdowns\/?$/ },
-	// { pattern: /^\/dev\/components\/medium\/inputs\/?$/ },
-	// { pattern: /^\/dev\/components\/small\/font-families\/?$/ },
-	// { pattern: /^\/dev\/components\/small\/buttons\/?$/ },
-	// { pattern: /^\/dev\/components\/small\/markers\/?$/ },
-	// { pattern: /^\/dev\/components\/small\/fonts\/?$/ },
-	// { pattern: /^\/dev\/components\/small\/icons\/?$/ },
-	// { pattern: /^\/dev\/app-info\/?$/ },
-	// { pattern: /^\/dev\/validate\/?$/ },
-	// { pattern: /^\/dev\/webrain\/?$/ },
-	// { pattern: /^\/dev\/status\/?$/ },
-	// { pattern: /^\/dev\/tests\/?$/ }
+	// { pattern: /^//$/ },
+	// { pattern: /^//main//?$/ },
+	// { pattern: /^//main//tailwind//?$/ },
+	// { pattern: /^//dev//?$/ },
+	// { pattern: /^//dev//components//?$/ },
+	// { pattern: /^//dev//components//medium//dropdowns//?$/ },
+	// { pattern: /^//dev//components//medium//inputs//?$/ },
+	// { pattern: /^//dev//components//small//font-families//?$/ },
+	// { pattern: /^//dev//components//small//buttons//?$/ },
+	// { pattern: /^//dev//components//small//markers//?$/ },
+	// { pattern: /^//dev//components//small//fonts//?$/ },
+	// { pattern: /^//dev//components//small//icons//?$/ },
+	// { pattern: /^//dev//app-info//?$/ },
+	// { pattern: /^//dev//validate//?$/ },
+	// { pattern: /^//dev//webrain//?$/ },
+	// { pattern: /^//dev//status//?$/ },
+	// { pattern: /^//dev//tests//?$/ }
 // ];
 
 // endregion
