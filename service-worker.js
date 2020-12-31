@@ -55,7 +55,7 @@ self.addEventListener("install", event => {
   event.waitUntil(catchLog(caches
 	.open(cacheName)
 	.then(cache => {
-		cache.addAll(assets)
+		return cache.addAll(assets)
     })
   ))
 })
