@@ -8,7 +8,7 @@ var ASSETS = "cache".concat(timestamp);
 const assets = [
 	"/assets",
 	"/buttons.css",
-	"/components.html",
+	// "/components.html",
 	"/favicon.ico",
 	"/helpers.css",
 	"/helpers.js",
@@ -35,16 +35,16 @@ const assets = [
 	"/assets/icons/stop.svg",
 	"/assets/icons/undo.svg",
 	"/assets/icons/volume-high.svg",
-	"/assets/sounds/click-1.mp3",
-	"/assets/sounds/click-2.mp3",
-	"/assets/sounds/click-3.mp3",
+	// "/assets/sounds/click-1.mp3",
+	// "/assets/sounds/click-2.mp3",
+	// "/assets/sounds/click-3.mp3",
 	"/lib/NoSleep.min.js"
 ]
 
 var catchLog = function(promise) {
 	if (promise instanceof Promise) {
 		return promise.catch(function(err) {
-			console.error({ error: err })
+			console.error(err)
 			throw err
 		})
 	}
