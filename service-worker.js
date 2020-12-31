@@ -6,26 +6,19 @@ var ASSETS = "cache".concat(timestamp);
 
 // use: dir /s/b > list.txt
 const assets = [
-	"/assets",
 	"/buttons.css",
-	// "/components.html",
 	"/favicon.ico",
 	"/helpers.css",
 	"/helpers.js",
 	"/index.html",
 	"/layout.css",
-	"/lib",
-	"/list.txt",
 	"/manifest.json",
 	"/normalize.css",
-	"/ReadMe.md",
 	"/reset.css",
 	"/service-worker-register.js",
 	"/service-worker.js",
 	"/style.css",
 	"/styles.js",
-	"/assets/icons",
-	"/assets/sounds",
 	"/assets/icons/logo-192.png",
 	"/assets/icons/logo-512.png",
 	"/assets/icons/menu.svg",
@@ -35,9 +28,6 @@ const assets = [
 	"/assets/icons/stop.svg",
 	"/assets/icons/undo.svg",
 	"/assets/icons/volume-high.svg",
-	// "/assets/sounds/click-1.mp3",
-	// "/assets/sounds/click-2.mp3",
-	// "/assets/sounds/click-3.mp3",
 	"/lib/NoSleep.min.js"
 ]
 
