@@ -120,7 +120,7 @@
 			document.addEventListener('touchstart', function(e) {
 				if (e.target.tagName === 'LABEL' && e.target.children) {
 					for(var i = 0, len = e.target.childElementCount; i < len; i++) {
-						if (e.target.children[i].diabled) {
+						if (e.target.children[i].disabled) {
 							e.preventDefault();
 							return
 						}
