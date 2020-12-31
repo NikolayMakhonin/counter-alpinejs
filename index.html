@@ -195,7 +195,6 @@
           _tick: function(first) {
             if (this.timeRemaining <= 0) {
               this.stop()
-              this.sound(3)
 			  return
             }
 
@@ -234,6 +233,7 @@
             }
 
 			if (this.started) {
+				this.sound(3)
 				this.onIntervalEnd = false
 				this.onIntervalEnd = true
 			}
