@@ -412,6 +412,8 @@
 					:value="value"
 					x-model="counter.value"
 					:disabled="!timer.started || timer.interval - timer.intervalRemaining < 3000"
+					x-on:mousedown="counter.value = value"
+					x-on:touchstart="counter.value = value"
 				/>
 				<div
 					class="button click-shift checked-invert disabled-opacity m-1 w-24 h-24 relative border border-black">
