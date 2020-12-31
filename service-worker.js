@@ -40,10 +40,10 @@ const assets = [
 	"/lib/NoSleep.min.js"
 ]
 
-var catchLog = promise => {
+var catchLog = function(promise) {
 	if (promise instanceof Promise) {
 		return promise.catch(err => {
-			logger.error(err)
+			console.error(err)
 			throw err
 		})
 	}
