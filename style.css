@@ -99,7 +99,7 @@ html, body {
 
 button, input, label {
 	/* Disable zoom */
-	touch-action: manipulation!important;
+	touch-action: none!important;
 }
 
 html, body {
