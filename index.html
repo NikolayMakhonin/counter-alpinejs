@@ -93,7 +93,7 @@
 		<script src="js/common/service-worker-register.js"></script>
 		
 		<!-- Alpine.js framework. Docs: https://github.com/alpinejs/alpine -->
-		<script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
+		<script src="lib/alpine.min.js" defer></script>
 
 		<script src="js/common/helpers.js"></script>
 		<script src="lib/NoSleep.min.js"></script>
@@ -103,7 +103,7 @@
 		<link rel="stylesheet" href="styles/common/buttons.css">
 
 		<!-- Tailwind CSS framework. Docs: https://tailwindcss.com/docs/container -->
-		<link href="https://unpkg.com/tailwindcss@^2/dist/tailwind.min.css" rel="stylesheet">
+		<link href="lib/tailwind.min.css" rel="stylesheet">
 		
 		<link rel="stylesheet" href="styles/app/style.css">
 
@@ -273,32 +273,62 @@
               .join('\n')
             return statStr
           },
-          sessionsStat: function() {
+          sessionsStat: function(groupByTime) {
             var _this = this
-            var stat = this.sessions
+            var groups = this.sessions
               .filter(function(session) {
                 return session.log.length
               })
-              .map(function(session) {
-                var time = session.log[session.log.length - 1].time
-                var _stat = _this.sessionStat(session)
-                var sum = 0
-                var count = 0
-                Object.keys(_stat)
-                  .forEach(function(value) {
-                    sum += value * _stat[value]
-                    count += _stat[value]
-                  })
-                return {
-                  time: time,
-                  sum: sum,
-                  count: count,
-                }
-              }, {})
+			  .reduce(function(groups, session) {
+				var time = session.log[session.log.length - 1].time
+				if (groupByTime) {
+					time -= time % groupByTime
+				}
+				
+				var _stat = _this.sessionStat(session)
+				var sum = 0
+				var count = 0
+				
+				Object.keys(_stat)
+				  .forEach(function(value) {
+					sum += value * _stat[value]
+					count += _stat[value]
+				  })
+				
+				var group = groups[time]
+				if (!group) {
+					groups[time] = group = {
+						time: time,
+						sum: sum,
+						count: count,
+					}
+				} else {
+					group.sum += sum
+					group.count += count
+				}
+				
+				return groups
+			  }, {})
+			  
+            var stat = Object.values(groups)
+			
             return stat
           },
+		  reportPage: 0,
+		  _groupByTimes: [
+			0,
+			24 * 60 * 60 * 1000,
+			7 * 24 * 60 * 60 * 1000,
+			30 * 24 * 60 * 60 * 1000,
+		  ],
+		  nextPage: function() {
+			this.reportPage++
+			if (this.reportPage >= this._groupByTimes.length) {
+				this.reportPage = 0
+			}
+		  },
           sessionsReport: function() {
-            var statStr = this.sessionsStat()
+            var statStr = this.sessionsStat(this._groupByTimes[this.reportPage])
               .map(function(stat) {
                 return dateTimeToString(stat.time) + '\t' + stat.sum + '\t' + stat.count + '\t' + (stat.sum / stat.count * 100).toFixed(0) + '%'
               })
@@ -374,6 +404,9 @@
         $watch('counter.sessions', function() { save() })
         $watch('timer.started', function (started) {
           counter.newSession()
+		  if (!timer.started) {
+			counter.reportPage = 0
+		  }
         })
         $watch('timer.onIntervalEnd', function (onIntervalEnd) {
           if (onIntervalEnd) {
@@ -496,7 +529,8 @@
       </div>
       <div class="counter__content flex-auto slider flex flex-col">
         <div class="flex-auto log flex flex-col m-1 px-1.5 py-0.5 border border-black">
-          <textarea class="flex-auto" :value="timer.started ? counter.sessionReport() : counter.sessionsReport()"></textarea>
+          <div class="flex-auto whitespace-pre" x-text="timer.started ? counter.sessionReport() : counter.sessionsReport()"
+			x-on:click="if (!timer.started) { counter.nextPage() }"></div>
         </div>
       </div>
     </div>

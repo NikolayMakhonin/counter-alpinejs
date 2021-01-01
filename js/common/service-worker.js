@@ -28,7 +28,9 @@ const assets = [
 	"/assets/icons/stop.svg",
 	"/assets/icons/undo.svg",
 	"/assets/icons/volume-high.svg",
-	"/lib/NoSleep.min.js"
+	"/lib/alpine.min.js",
+	"/lib/NoSleep.min.js",
+	"/lib/tailwind.min.css",
 ]
 
 var catchLog = function(promise) {
