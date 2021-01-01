@@ -123,19 +123,19 @@
 }
 
 .click-invert:hover {
-	filter: invert(10%);
+	filter: invert(20%);
 }
 
 .click-invert:active {
-	filter: invert(15%);
+	filter: invert(25%);
 }
 
 label > :checked~.checked-invert {
-	filter: invert(15%);
+	filter: invert(25%);
 }
 
 label > :checked~.checked-invert:hover {
-	filter: invert(15%);
+	filter: invert(25%);
 }
 
 .disabled-opacity:disabled,
