@@ -6,19 +6,10 @@ var ASSETS = "cache".concat(timestamp);
 
 // use: dir /s/b > list.txt
 const assets = [
-	"/buttons.css",
+	"/components.html",
 	"/favicon.ico",
-	"/helpers.css",
-	"/helpers.js",
 	"/index.html",
-	"/layout.css",
 	"/manifest.json",
-	"/normalize.css",
-	"/reset.css",
-	"/service-worker-register.js",
-	"/service-worker.js",
-	"/style.css",
-	"/styles.js",
 	"/assets/icons/logo-192.png",
 	"/assets/icons/logo-512.png",
 	"/assets/icons/menu.svg",
@@ -28,9 +19,19 @@ const assets = [
 	"/assets/icons/stop.svg",
 	"/assets/icons/undo.svg",
 	"/assets/icons/volume-high.svg",
+	"/assets/icons/weather-night.svg",
+	"/js/common/helpers.js",
+	"/js/common/service-worker-register.js",
+	"/js/common/service-worker.js",
 	"/lib/alpine.min.js",
 	"/lib/NoSleep.min.js",
 	"/lib/tailwind.min.css",
+	"/styles/app/style.css",
+	"/styles/common/buttons.css",
+	"/styles/common/helpers.css",
+	"/styles/common/layout.css",
+	"/styles/common/normalize.css",
+	"/styles/common/reset.css",
 ]
 
 var catchLog = function(promise) {
