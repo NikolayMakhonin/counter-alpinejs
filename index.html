@@ -528,8 +528,8 @@
         </button>
       </div>
       <div class="counter__content flex-auto slider flex flex-col">
-        <div class="flex-auto log flex flex-col m-1 px-1.5 py-0.5 border border-black">
-          <div class="flex-auto whitespace-pre" x-text="timer.started ? counter.sessionReport() : counter.sessionsReport()"
+        <div class="flex-auto log flex flex-col m-1 px-1.5 py-0.5 border border-black relative overflow-y-auto">
+          <div class="absolute flex-auto whitespace-pre" x-text="timer.started ? counter.sessionReport() : counter.sessionsReport()"
 			x-on:click="if (!timer.started) { counter.nextPage() }"></div>
         </div>
       </div>
