@@ -67,6 +67,7 @@ var sounds = {
 var beep = (function() {
 	if (!window.AudioContext) {
 		return function() {
+			sounds.currentTime = 200
 			sounds.beep.play()
 		}
 	}
