@@ -68,3 +68,9 @@
 	pointer-events: auto!important;
 	user-select: auto!important;
 }
+
+.content-center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
