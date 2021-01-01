@@ -588,7 +588,7 @@
             'performance',
           ].filter(feature => typeof app[feature] === 'function')
 		  
-		  console.log('Firebase SDK loaded with ${features.join(', ')}')
+		  console.log('Firebase SDK loaded with: ' + features.join(', '))
         } catch (e) {
           console.error(e)
         }
