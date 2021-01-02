@@ -481,16 +481,16 @@
 			</select>
 			<label class="no-select no-drag">
 				<input
-						type="checkbox"
-						class="collapsed-focus"
-						value="value"
-						x-model="nightMode"
+					type="checkbox"
+					class="collapsed-focus"
+					value="value"
+					x-model="nightMode"
 				/>
 				<div
-						class="flex-none m-1 h-12 w-12 button click-shift checked-invert relative border border-black"
+					class="flex-none m-1 h-12 w-12 button click-shift checked-invert relative border border-black"
 				>
 				<span
-						class="icon icon-mask icon--weather-night bg-black"
+					class="icon icon-mask icon--weather-night bg-black"
 				>&nbsp;</span>&nbsp;
 				</div>
 			</label>
@@ -499,21 +499,21 @@
 			<template x-for="value in [0, 1]">
 				<label class="no-select no-drag">
 					<input
-							type="radio"
-							group="value"
-							class="collapsed-focus"
-							:value="value"
-							x-model="counter.value"
-							:disabled="!timer.started || timer.interval - timer.intervalRemaining < 3000"
+						type="radio"
+						group="value"
+						class="collapsed-focus"
+						:value="value"
+						x-model="counter.value"
+						:disabled="!timer.started || timer.interval - timer.intervalRemaining < 3000"
 					/>
 					<div
-							class="button click-shift checked-invert disabled-opacity m-1 w-36 h-36 relative border border-black"
-							x-on:touchstart="counter.value = value; if (timer.soundEnabled) { beep(100, 523.2511306, 80) }"
-							x-on:mousedown="counter.value = value; if (timer.soundEnabled) { beep(100, 523.2511306, 80) }"
+						class="button click-shift checked-invert disabled-opacity m-1 w-36 h-36 relative border border-black"
+						x-on:touchstart="counter.value = value; if (timer.soundEnabled) { beep(100, 523.2511306, 80) }"
+						x-on:mousedown="counter.value = value; if (timer.soundEnabled) { beep(100, 523.2511306, 80) }"
 					>
 						<span
-								class="icon icon-mask bg-black"
-								:class="{['icon--numeric-' + value]: true}"
+							class="icon icon-mask bg-black"
+							:class="{['icon--numeric-' + value]: true}"
 						>&nbsp;</span>&nbsp;
 					</div>
 				</label>
@@ -522,64 +522,65 @@
 		<div class="counter__header timer flex">
 			<label class="no-select no-drag">
 				<input
-						type="checkbox"
-						class="collapsed-focus"
-						value="value"
-						x-model="timer.soundEnabled"
+					type="checkbox"
+					class="collapsed-focus"
+					value="value"
+					x-model="timer.soundEnabled"
 				/>
 				<div
-						class="flex-none m-1 h-12 w-12 button click-shift checked-invert relative border border-black"
+					class="flex-none m-1 h-12 w-12 button click-shift checked-invert relative border border-black"
 				>
 				<span
-						class="icon icon-mask icon--volume-high bg-black"
+					class="icon icon-mask icon--volume-high bg-black"
 				>&nbsp;</span>&nbsp;
 				</div>
 			</label>
 			<div
-					class="flex-1 m-1 h-12 px-1.5 py-1 border border-black bg-gray-200 font-bold content-center"
-					:class="{'collapsed': !timer.started}"
-					x-text="timeToString(timer.timeRemaining)"
+				class="flex-1 m-1 h-12 px-1.5 py-1 border border-black bg-gray-200 font-bold content-center"
+				:class="{'collapsed': !timer.started}"
+				x-text="timeToString(timer.timeRemaining)"
 			></div>
 			<div
-					class="flex-1 m-1 h-12 px-1.5 py-1 border border-black bg-gray-200 font-bold content-center"
-					:class="{'collapsed': !timer.started}"
-					x-text="timeToString(timer.intervalRemaining)"
+				class="flex-1 m-1 h-12 px-1.5 py-1 border border-black bg-gray-200 font-bold content-center"
+				:class="{'collapsed': !timer.started}"
+				x-text="timeToString(timer.intervalRemaining)"
 			></div>
 			<select
-					class="flex-1 m-1 h-12 px-1.5 py-1 border border-black content-center"
-					x-model="timer.time"
-					:class="{'collapsed': timer.started}"
+				class="flex-1 m-1 h-12 px-1.5 py-1 border border-black content-center"
+				x-model="timer.time"
+				:class="{'collapsed': timer.started}"
 			>
 				<template x-for="value in [60, 120, 180, 240, 300, 600, 900, 1200, 1500, 1800, 2400, 3600, 5400, 7200, 14400, 10800, 21600, 25200, 28800, 32400, 36000, 39600, 43200, 46800, 50400, 54000, 57600]">
 					<option :value="value * 1000" x-text="timeToString(value * 1000)"></option>
 				</template>
 			</select>
 			<select
-					class="flex-1 m-1 h-12 px-1.5 py-1 border border-black content-center"
-					x-model="timer.interval"
-					:class="{'collapsed': timer.started}">
+				class="flex-1 m-1 h-12 px-1.5 py-1 border border-black content-center"
+				x-model="timer.interval"
+				:class="{'collapsed': timer.started}"
+			>
 				<template x-for="value in [1, 2, 3, 4, 5, 10, 15, 20, 30, 40, 60, 120, 180, 240, 300, 600, 900, 1200, 1500, 1800, 2400, 3600, 5400, 7200]">
 					<option :value="value * 1000" x-text="timeToString(value * 1000)"></option>
 				</template>
 			</select>
 			<button
-					class="flex-none m-1 h-12 w-12 button click-shift checked-invert relative border border-black"
-					x-on:click="timer.startStop()"
-					:class="{'bg-gray-200': timer.started}"
+				class="flex-none m-1 h-12 w-12 button click-shift checked-invert relative border border-black"
+				x-on:click="timer.startStop()"
+				:class="{'bg-gray-200': timer.started}"
 			>
-			  <span
-					  class="icon icon-mask bg-black"
-					  :class="{
-				  'icon--play': !timer.started,
-				  'icon--stop': timer.started,
-				}"
-			  >&nbsp;</span>&nbsp;
+				<span
+					class="icon icon-mask bg-black"
+						:class="{
+						'icon--play': !timer.started,
+						'icon--stop': timer.started,
+					}"
+				>&nbsp;</span>&nbsp;
 			</button>
 		</div>
 		<div class="counter__content flex-auto slider flex flex-col">
 			<div
-					class="flex-auto log flex flex-col m-1 px-1.5 py-0.5 border border-black relative overflow-y-auto"
-					x-on:click="if (!timer.started) { counter.nextPage() }"
+				class="flex-auto log flex flex-col m-1 px-1.5 py-0.5 border border-black relative overflow-y-auto"
+				x-on:click="if (!timer.started) { counter.nextPage() }"
 			>
 				<div class="absolute flex-auto whitespace-pre" x-text="timer.started ? counter.sessionReport() : counter.sessionsReport()"></div>
 			</div>
