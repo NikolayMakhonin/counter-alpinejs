@@ -8,7 +8,7 @@
 	<link rel="icon" href="favicon.ico" type="image/x-icon" />
 
 	<!-- PWA -->
-	<base href="/" />
+	<!-- <base href="/" /> -->
 	<link rel="manifest" href="manifest.json" />
 
 	<!-- region Error handling -->
@@ -110,6 +110,13 @@
 	-->
 	<script defer src="/__/firebase/init.js?useEmulator=true"></script>
 
+	<!-- region Firebase UI -->
+	
+	<script src="lib/firebase-ui-auth.js"></script>
+	<link rel="stylesheet" href="lib/firebase-ui-auth.css" />
+
+	<!-- endregion -->
+	
 	<!-- endregion -->
 
 	<script src="js/common/service-worker-register.js"></script>
@@ -129,6 +136,8 @@
 
 	<link rel="stylesheet" href="styles/app/style.css">
 
+	<!-- region Helpers -->
+	
 	<script>
 		'use strict';
 
@@ -152,298 +161,316 @@
 
 		// endregion
 	</script>
+
+	<!-- endregion -->
+
+	<!-- region UI Logic -->
+	
+	<script>
+		
+		function alpineCounter() {
+			var data = {
+				nightMode: false,
+				timer: {
+					time: 120 * 1000,
+						interval: 2 * 1000,
+						timeRemaining: 120 * 1000,
+						intervalRemaining: 2 * 1000,
+						started: false,
+						soundEnabled: false,
+						vibrateEnabled: false,
+						blinkEnabled: true,
+						isBlink: false,
+						onIntervalEnd: false,
+						_sound: function () {
+						if (this.soundEnabled) {
+							beep(100, 440, 80)
+						}
+						if (this.vibrateEnabled && navigator.vibrate) {
+							navigator.vibrate(50)
+						}
+						if (this.blinkEnabled) {
+							var _this = this
+							_this.isBlink = true
+							setTimeout(function() {
+								_this.isBlink = false
+							}, 200)
+						}
+					},
+					sound: function(count) {
+						if (count == null) {
+							count = 1
+						}
+
+						// for(i = 0; i < count; i++) {
+						//  this._sound()
+						//  await delay(100)
+						// }
+
+						var _this = this
+
+						function _recursive() {
+							if (i < count) {
+								return Promise.resolve().then(function () {
+									_this._sound();
+									return delay(500);
+								}).then(function () {
+									i++;
+									return _recursive();
+								});
+							}
+						}
+
+						return Promise.resolve().then(function () {
+							i = 0;
+							return _recursive();
+						}).then(function () {});
+					},
+					_timer: null,
+						_tick: function(first) {
+						if (this.timeRemaining <= 0) {
+							this.stop()
+							return
+						}
+
+						if (this.intervalRemaining <= 0) {
+							this.intervalRemaining = this.interval
+							this.sound(1)
+							if (!first) {
+								this.onIntervalEnd = false
+								this.onIntervalEnd = true
+							}
+						}
+
+						this.timeRemaining -= 1000
+						this.intervalRemaining -= 1000
+					},
+					start: function() {
+						this.stop()
+
+						this.timeRemaining = this.time
+						this.intervalRemaining = 0
+
+						this.started = true
+
+						noSleep.enable()
+
+						var _this = this
+						_this._tick(true)
+						this._timer = setInterval(function() {
+							_this._tick(false)
+						}, 1000)
+					},
+					stop: function() {
+						if (this._timer) {
+							clearInterval(this._timer)
+							this._timer = null
+						}
+
+						if (this.started) {
+							this.sound(3)
+							this.onIntervalEnd = false
+							this.onIntervalEnd = true
+						}
+
+						this.started = false
+
+						noSleep.disable()
+					},
+					startStop: function() {
+						if (this.started) {
+							this.stop()
+						} else {
+							this.start()
+						}
+					},
+				},				
+				counter: {
+					sessions: [{
+						log: [], // { time, value }
+					}],
+					sessionStat: function(session) {
+						if (!session) {
+							session = this.sessions[0]
+						}
+						var stat = session.log
+							.reduce(function(a, o) {
+								a[o.value] = (a[o.value] || 0) + 1
+								return a
+							}, {})
+						return stat
+					},
+					sessionReport: function() {
+						var stat = this.sessionStat()
+						var statStr = Object.keys(stat)
+							.map(function(value) {
+								return value + ': ' + stat[value]
+							})
+							.join('\n')
+						return statStr
+					},
+					sessionsStat: function(groupByTime) {
+						var _this = this
+						var groups = this.sessions
+							.filter(function(session) {
+								return session.log.length
+							})
+							.reduce(function(groups, session) {
+								var time = session.log[session.log.length - 1].time
+								if (groupByTime) {
+									time -= time % groupByTime
+								}
+
+								var _stat = _this.sessionStat(session)
+								var sum = 0
+								var count = 0
+
+								Object.keys(_stat)
+									.forEach(function(value) {
+										sum += value * _stat[value]
+										count += _stat[value]
+									})
+
+								var group = groups[time]
+								if (!group) {
+									groups[time] = group = {
+										time: time,
+										sum: sum,
+										count: count,
+									}
+								} else {
+									group.sum += sum
+									group.count += count
+								}
+
+								return groups
+							}, {})
+
+						var stat = Object.values(groups)
+
+						return stat
+					},
+					reportPage: 0,
+					_groupByTimes: [
+						0,
+						24 * 60 * 60 * 1000,
+						7 * 24 * 60 * 60 * 1000,
+						30 * 24 * 60 * 60 * 1000,
+					],
+					nextPage: function() {
+						this.reportPage++
+						if (this.reportPage >= this._groupByTimes.length) {
+							this.reportPage = 0
+						}
+					},
+					sessionsReport: function() {
+						var statStr = this.sessionsStat(this._groupByTimes[this.reportPage])
+							.map(function(stat) {
+								return dateTimeToString(stat.time) + '\t' + stat.sum + '\t' + stat.count + '\t' + (stat.sum / stat.count * 100).toFixed(0) + '%'
+							})
+							.join('\n')
+						return statStr
+					},
+					newSession: function() {
+						if (this.sessions[0].log.length > 0) {
+							if (this.sessions[0].log.length === 1 && !this.sessions[0].log[0].value) {
+								this.sessions[0].log.length = 0
+							} else {
+								this.sessions.unshift({ log: [] })
+							}
+						}
+					},
+					value: null,
+					addValue: function(value) {
+						if (value == null) {
+							value = this.value && parseInt(this.value) || 0
+							this.value = null
+						}
+						this.sessions[0].log.unshift({
+							time: Date.now(),
+							value: value,
+						})
+					},
+					undo: function() {
+						if (this.sessions[0].log.length > 0) {
+							this.sessions[0].log.shift()
+						}
+					},
+				},
+				save: function () {
+					state = {
+						nightMode: this.nightMode,
+						timer: {
+							time: this.timer.time,
+							interval: this.timer.interval,
+							soundEnabled: this.timer.soundEnabled,
+							vibrateEnabled: this.timer.vibrateEnabled,
+							blinkEnabled: this.timer.blinkEnabled,
+						},
+						counter: {
+							sessions: this.counter.sessions,
+						}
+					}
+
+					localStorage.setItem('state', JSON.stringify(state))
+
+					// this.timer.sound()
+				},
+				init: function() {
+					var _this = this
+					
+					var state = JSON.parse(localStorage.getItem('state') || '{}')
+					nightMode = state.nightMode
+					if (state.timer) {
+						this.timer.time = state.timer.time
+						this.timer.interval = state.timer.interval
+						this.timer.soundEnabled = state.timer.soundEnabled
+						this.timer.vibrateEnabled = state.timer.vibrateEnabled
+						this.timer.blinkEnabled = state.timer.blinkEnabled
+					}
+					if (state.counter) {
+						this.counter.sessions = state.counter.sessions
+					}
+
+					this.$watch('nightMode', function() { _this.save() })
+					this.$watch('timer.time', function() { _this.save() })
+					this.$watch('timer.interval', function() { _this.save() })
+					this.$watch('timer.soundEnabled', function() { _this.save() })
+					this.$watch('timer.vibrateEnabled', function() { _this.save() })
+					this.$watch('timer.blinkEnabled', function() { _this.save() })
+					this.$watch('counter.sessions', function() { _this.save() })
+					this.$watch('timer.started', function (started) {
+						_this.counter.newSession()
+						if (!_this.timer.started) {
+							_this.counter.reportPage = 0
+						}
+					})
+					this.$watch('timer.onIntervalEnd', function (onIntervalEnd) {
+						if (onIntervalEnd) {
+							_this.counter.addValue()
+							_this.save()
+						}
+					})
+
+					setTimeout(function() {
+						_this.timer.started = !_this.timer.started
+						_this.timer.started = !_this.timer.started
+					}, 1)
+				},
+			}
+
+			return data
+		}
+	</script>
+
+	<!-- endregion -->
 </head>
 <body>
 	<div
-			x-data="{
-			nightMode: false,
-			timer: {
-			  time: 120 * 1000,
-			  interval: 2 * 1000,
-			  timeRemaining: 120 * 1000,
-			  intervalRemaining: 2 * 1000,
-			  started: false,
-			  soundEnabled: false,
-			  vibrateEnabled: false,
-			  blinkEnabled: true,
-			  isBlink: false,
-			  onIntervalEnd: false,
-			  _sound: function () {
-				if (this.soundEnabled) {
-				  beep(100, 440, 80)
-				}
-				if (this.vibrateEnabled && navigator.vibrate) {
-				  navigator.vibrate(50)
-				}
-				if (this.blinkEnabled) {
-				  var _this = this
-				  _this.isBlink = true
-				  setTimeout(function() {
-					_this.isBlink = false
-				  }, 200)
-				}
-			  },
-			  sound: function(count) {
-				if (count == null) {
-				  count = 1
-				}
-	
-				// for(i = 0; i < count; i++) {
-				//  this._sound()
-				//  await delay(100)
-				// }
-	
-				var _this = this
-	
-				function _recursive() {
-				  if (i < count) {
-					return Promise.resolve().then(function () {
-					  _this._sound();
-					  return delay(500);
-					}).then(function () {
-					  i++;
-					  return _recursive();
-					});
-				  }
-				}
-	
-				return Promise.resolve().then(function () {
-				  i = 0;
-				  return _recursive();
-				}).then(function () {});
-			  },
-			  _timer: null,
-			  _tick: function(first) {
-				if (this.timeRemaining <= 0) {
-				  this.stop()
-				  return
-				}
-	
-				if (this.intervalRemaining <= 0) {
-				  this.intervalRemaining = this.interval
-				  this.sound(1)
-				  if (!first) {
-					  this.onIntervalEnd = false
-					  this.onIntervalEnd = true
-				  }
-				}
-	
-				this.timeRemaining -= 1000
-				this.intervalRemaining -= 1000
-			  },
-			  start: function() {
-				this.stop()
-	
-				this.timeRemaining = this.time
-				this.intervalRemaining = 0
-	
-				this.started = true
-	
-				noSleep.enable()
-				
-				var _this = this
-				_this._tick(true)
-				this._timer = setInterval(function() {
-				  _this._tick(false)
-				}, 1000)
-			  },
-			  stop: function() {
-				if (this._timer) {
-				  clearInterval(this._timer)
-				  this._timer = null
-				}
-	
-				if (this.started) {
-					this.sound(3)
-					this.onIntervalEnd = false
-					this.onIntervalEnd = true
-				}
-				
-				this.started = false
-				
-				noSleep.disable()
-			  },
-			  startStop: function() {
-				if (this.started) {
-				  this.stop()
-				} else {
-				  this.start()
-				}
-			  },
-			},
-			counter: {
-			  sessions: [{
-				log: [], // { time, value }
-			  }],
-			  sessionStat: function(session) {
-				if (!session) {
-				  session = this.sessions[0]
-				}
-				var stat = session.log
-				  .reduce(function(a, o) {
-					a[o.value] = (a[o.value] || 0) + 1
-					return a
-				  }, {})
-				return stat
-			  },
-			  sessionReport: function() {
-				var stat = this.sessionStat()
-				var statStr = Object.keys(stat)
-				  .map(function(value) {
-					return value + ': ' + stat[value]
-				  })
-				  .join('\n')
-				return statStr
-			  },
-			  sessionsStat: function(groupByTime) {
-				var _this = this
-				var groups = this.sessions
-				  .filter(function(session) {
-					return session.log.length
-				  })
-				  .reduce(function(groups, session) {
-					var time = session.log[session.log.length - 1].time
-					if (groupByTime) {
-						time -= time % groupByTime
-					}
-					
-					var _stat = _this.sessionStat(session)
-					var sum = 0
-					var count = 0
-					
-					Object.keys(_stat)
-					  .forEach(function(value) {
-						sum += value * _stat[value]
-						count += _stat[value]
-					  })
-					
-					var group = groups[time]
-					if (!group) {
-						groups[time] = group = {
-							time: time,
-							sum: sum,
-							count: count,
-						}
-					} else {
-						group.sum += sum
-						group.count += count
-					}
-					
-					return groups
-				  }, {})
-				  
-				var stat = Object.values(groups)
-				
-				return stat
-			  },
-			  reportPage: 0,
-			  _groupByTimes: [
-				0,
-				24 * 60 * 60 * 1000,
-				7 * 24 * 60 * 60 * 1000,
-				30 * 24 * 60 * 60 * 1000,
-			  ],
-			  nextPage: function() {
-				this.reportPage++
-				if (this.reportPage >= this._groupByTimes.length) {
-					this.reportPage = 0
-				}
-			  },
-			  sessionsReport: function() {
-				var statStr = this.sessionsStat(this._groupByTimes[this.reportPage])
-				  .map(function(stat) {
-					return dateTimeToString(stat.time) + '\t' + stat.sum + '\t' + stat.count + '\t' + (stat.sum / stat.count * 100).toFixed(0) + '%'
-				  })
-				  .join('\n')
-				return statStr
-			  },
-			  newSession: function() {
-				if (this.sessions[0].log.length > 0) {
-					if (this.sessions[0].log.length === 1 && !this.sessions[0].log[0].value) {
-						this.sessions[0].log.length = 0
-					} else {
-						this.sessions.unshift({ log: [] })			
-					}
-				}
-			  },
-			  value: null,
-			  addValue: function(value) {
-				if (value == null) {
-					value = this.value && parseInt(this.value) || 0
-					this.value = null
-				}
-				this.sessions[0].log.unshift({
-				  time: Date.now(),
-				  value: value,
-				})
-			  },
-			  undo: function() {
-				if (this.sessions[0].log.length > 0) {
-				  this.sessions[0].log.shift()
-				}
-			  },
-			},
-			save: function () {
-			  state = {
-				nightMode: this.nightMode,
-				timer: {
-				  time: this.timer.time,
-				  interval: this.timer.interval,
-				  soundEnabled: this.timer.soundEnabled,
-				  vibrateEnabled: this.timer.vibrateEnabled,
-				  blinkEnabled: this.timer.blinkEnabled,
-				},
-				counter: {
-				  sessions: this.counter.sessions,
-				}
-			  }
-	
-			  localStorage.setItem('state', JSON.stringify(state))
-	
-			  // this.timer.sound()
-			}
-		  }"
-			x-init="function() {
-			var state = JSON.parse(localStorage.getItem('state') || '{}')
-			nightMode = state.nightMode
-			if (state.timer) {
-			  timer.time = state.timer.time
-			  timer.interval = state.timer.interval
-			  timer.soundEnabled = state.timer.soundEnabled
-			  timer.vibrateEnabled = state.timer.vibrateEnabled
-			  timer.blinkEnabled = state.timer.blinkEnabled
-			}
-			if (state.counter) {
-			  counter.sessions = state.counter.sessions
-			}
-	
-			$watch('nightMode', function() { save() })
-			$watch('timer.time', function() { save() })
-			$watch('timer.interval', function() { save() })
-			$watch('timer.soundEnabled', function() { save() })
-			$watch('timer.vibrateEnabled', function() { save() })
-			$watch('timer.blinkEnabled', function() { save() })
-			$watch('counter.sessions', function() { save() })
-			$watch('timer.started', function (started) {
-			  counter.newSession()
-			  if (!timer.started) {
-				counter.reportPage = 0
-			  }
-			})
-			$watch('timer.onIntervalEnd', function (onIntervalEnd) {
-			  if (onIntervalEnd) {
-				counter.addValue()
-				save()
-			  }
-			})
-	
-			setTimeout(function() {
-			  timer.started = !timer.started
-			  timer.started = !timer.started
-			}, 1)
-		  }"
-			class="absolute inset-0 counter flex flex-col p-0.5 bg-white"
-			:class="{blink: timer.isBlink, night: nightMode}"
+		x-data="alpineCounter()"
+		x-init="init"
+		class="absolute inset-0 counter flex flex-col p-0.5 bg-white"
+		:class="{blink: timer.isBlink, night: nightMode}"
 	>
 		<div class="counter__header flex">
 			<button class="flex-none m-1 h-12 w-12 button click-shift relative border border-black">
@@ -592,6 +619,9 @@
 	
 				var googleAuthProvider = new firebase.auth.GoogleAuthProvider();
 	
+				// see: https://github.com/firebase/firebaseui-web
+				// see: https://firebaseopensource.com/projects/firebase/firebaseui-web/
+				// see: https://howtofirebase.com/firebase-authentication-for-web-d58aad62cf6d
 				firebase
 					.auth()
 					.onAuthStateChanged(function(user) {
