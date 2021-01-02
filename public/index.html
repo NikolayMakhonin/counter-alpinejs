@@ -1,626 +1,626 @@
 <!doctype html>
 
 <html>
-	<head>
-		<meta charset="UTF-8">
-		<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
-		
-		<link rel="icon" href="favicon.ico" type="image/x-icon" />
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no">
 
-		<!-- PWA -->
-		<base href="/" />
-		<link rel="manifest" href="manifest.json" />
+	<link rel="icon" href="favicon.ico" type="image/x-icon" />
 
-		<!-- region Error handling -->
+	<!-- PWA -->
+	<base href="/" />
+	<link rel="manifest" href="manifest.json" />
 
-		<script>
-			'use strict';
+	<!-- region Error handling -->
 
-			(function initErrorHandler() {
-				function subscribeUnhandledErrors() {
-					// eslint-disable-next-line no-eval
-					var origEval = window.eval;
-					// eslint-disable-next-line no-eval
-					delete window.eval;
-					// eslint-disable-next-line no-eval,func-name-matching
-					window.eval = function _eval(str) {
-						if (str.indexOf('async function') >= 0) {
-							return origEval.call(window, str);
-						}
+	<script>
+		'use strict';
 
-						try {
-							return origEval.call(window, str);
-						} catch (ex) {
-							console.error(ex, str);
-							throw ex;
-						}
-					};
+		(function initErrorHandler() {
+			function subscribeUnhandledErrors() {
+				// eslint-disable-next-line no-eval
+				var origEval = window.eval;
+				// eslint-disable-next-line no-eval
+				delete window.eval;
+				// eslint-disable-next-line no-eval,func-name-matching
+				window.eval = function _eval(str) {
+					if (str.indexOf('async function') >= 0) {
+						return origEval.call(window, str);
+					}
 
-					// function errorHandler(...args) {
-					// 	console.error('Unhandled rejection: ', ...args);
-					// }
+					try {
+						return origEval.call(window, str);
+					} catch (ex) {
+						console.error(ex, str);
+						throw ex;
+					}
+				};
 
-					function errorHandler() {
-						var len = arguments.length;
-						var args = new Array(len);
+				// function errorHandler(...args) {
+				// 	console.error('Unhandled rejection: ', ...args);
+				// }
 
-						for (var i = 0; i < len; i++) {
-							var arg = arguments[i];
-							arg = (typeof PromiseRejectionEvent !== 'undefined'
-								? arg instanceof PromiseRejectionEvent && arg.reason
-								: arg.reason)
-								|| arg;
+				function errorHandler() {
+					var len = arguments.length;
+					var args = new Array(len);
 
-							if (arg instanceof Error) {
-								var obj = {};
-								// eslint-disable-next-line guard-for-in
-								for (var key in arg) {
-									obj[key] = arg[key];
-								}
-								obj.origErrorObject = arg;
-								arg = obj;
+					for (var i = 0; i < len; i++) {
+						var arg = arguments[i];
+						arg = (typeof PromiseRejectionEvent !== 'undefined'
+							? arg instanceof PromiseRejectionEvent && arg.reason
+							: arg.reason)
+							|| arg;
+
+						if (arg instanceof Error) {
+							var obj = {};
+							// eslint-disable-next-line guard-for-in
+							for (var key in arg) {
+								obj[key] = arg[key];
 							}
-
-							args[i] = arg;
+							obj.origErrorObject = arg;
+							arg = obj;
 						}
 
-						// eslint-disable-next-line prefer-spread
-						console.error.apply(console, ['Unhandled rejection: '].concat(args));
-						alert(['Unhandled rejection: '].concat(args))
+						args[i] = arg;
 					}
 
-					window.addEventListener('unhandledrejection', errorHandler);
-
-					window.onunhandledrejection = errorHandler;
-
-					window.onerror = errorHandler;
-
-					return function unsubscribe() {
-						window.removeEventListener('unhandledrejection', errorHandler);
-						window.onunhandledrejection = null;
-						window.onerror = null;
-						// eslint-disable-next-line no-eval
-						window.eval = origEval;
-					};
+					// eslint-disable-next-line prefer-spread
+					console.error.apply(console, ['Unhandled rejection: '].concat(args));
+					alert(['Unhandled rejection: '].concat(args))
 				}
 
-				window.unsubscribeUnhandledErrors = subscribeUnhandledErrors();
-			})();
-		</script>
+				window.addEventListener('unhandledrejection', errorHandler);
 
-		<!-- endregion -->
+				window.onunhandledrejection = errorHandler;
+
+				window.onerror = errorHandler;
+
+				return function unsubscribe() {
+					window.removeEventListener('unhandledrejection', errorHandler);
+					window.onunhandledrejection = null;
+					window.onerror = null;
+					// eslint-disable-next-line no-eval
+					window.eval = origEval;
+				};
+			}
+
+			window.unsubscribeUnhandledErrors = subscribeUnhandledErrors();
+		})();
+	</script>
+
+	<!-- endregion -->
+
+	<!-- region Firebase -->
+
+	<!-- update the version number as needed -->
+	<script defer src="/__/firebase/8.2.1/firebase-app.js"></script>
+	<!-- include only the Firebase features as you need -->
+	<script defer src="/__/firebase/8.2.1/firebase-auth.js"></script>
+	<script defer src="/__/firebase/8.2.1/firebase-database.js"></script>
+	<script defer src="/__/firebase/8.2.1/firebase-firestore.js"></script>
+	<script defer src="/__/firebase/8.2.1/firebase-functions.js"></script>
+	<script defer src="/__/firebase/8.2.1/firebase-messaging.js"></script>
+	<script defer src="/__/firebase/8.2.1/firebase-storage.js"></script>
+	<script defer src="/__/firebase/8.2.1/firebase-analytics.js"></script>
+	<script defer src="/__/firebase/8.2.1/firebase-remote-config.js"></script>
+	<script defer src="/__/firebase/8.2.1/firebase-performance.js"></script>
+	<!-- 
+	  initialize the SDK after all desired features are loaded, set useEmulator to false
+	  to avoid connecting the SDK to running emulators.
+	-->
+	<script defer src="/__/firebase/init.js?useEmulator=true"></script>
+
+	<!-- endregion -->
+
+	<script src="js/common/service-worker-register.js"></script>
+
+	<!-- Alpine.js framework. Docs: https://github.com/alpinejs/alpine -->
+	<script src="lib/alpine.min.js" defer></script>
+
+	<script src="js/common/helpers.js"></script>
+	<script src="lib/NoSleep.min.js?v=1"></script>
+
+	<link rel="stylesheet" href="styles/common/reset.css">
+	<link rel="stylesheet" href="styles/common/helpers.css">
+	<link rel="stylesheet" href="styles/common/buttons.css">
+
+	<!-- Tailwind CSS framework. Docs: https://tailwindcss.com/docs/container -->
+	<link href="lib/tailwind.min.css" rel="stylesheet">
+
+	<link rel="stylesheet" href="styles/app/style.css">
+
+	<script>
+		'use strict';
+
+		var noSleep = new NoSleep()
+
+		// region Disable zoom
+
+		document.addEventListener('gesturestart', function(e) {
+			e.preventDefault();
+		});
+		document.addEventListener('touchstart', function(e) {
+			if (e.target.tagName === 'LABEL' && e.target.children) {
+				for(var i = 0, len = e.target.childElementCount; i < len; i++) {
+					if (e.target.children[i].disabled) {
+						e.preventDefault();
+						return
+					}
+				}
+			}
+		});
+
+		// endregion
+	</script>
+</head>
+<body>
+	<div
+			x-data="{
+			nightMode: false,
+			timer: {
+			  time: 120 * 1000,
+			  interval: 2 * 1000,
+			  timeRemaining: 120 * 1000,
+			  intervalRemaining: 2 * 1000,
+			  started: false,
+			  soundEnabled: false,
+			  vibrateEnabled: false,
+			  blinkEnabled: true,
+			  isBlink: false,
+			  onIntervalEnd: false,
+			  _sound: function () {
+				if (this.soundEnabled) {
+				  beep(100, 440, 80)
+				}
+				if (this.vibrateEnabled && navigator.vibrate) {
+				  navigator.vibrate(50)
+				}
+				if (this.blinkEnabled) {
+				  var _this = this
+				  _this.isBlink = true
+				  setTimeout(function() {
+					_this.isBlink = false
+				  }, 200)
+				}
+			  },
+			  sound: function(count) {
+				if (count == null) {
+				  count = 1
+				}
 	
-		<!-- region Firebase -->
-
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/8.2.1/firebase-app.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/8.2.1/firebase-auth.js"></script>
-    <script defer src="/__/firebase/8.2.1/firebase-database.js"></script>
-    <script defer src="/__/firebase/8.2.1/firebase-firestore.js"></script>
-    <script defer src="/__/firebase/8.2.1/firebase-functions.js"></script>
-    <script defer src="/__/firebase/8.2.1/firebase-messaging.js"></script>
-    <script defer src="/__/firebase/8.2.1/firebase-storage.js"></script>
-    <script defer src="/__/firebase/8.2.1/firebase-analytics.js"></script>
-    <script defer src="/__/firebase/8.2.1/firebase-remote-config.js"></script>
-    <script defer src="/__/firebase/8.2.1/firebase-performance.js"></script>
-    <!-- 
-      initialize the SDK after all desired features are loaded, set useEmulator to false
-      to avoid connecting the SDK to running emulators.
-    -->
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
-
-		<!-- endregion -->
-
-		<script src="js/common/service-worker-register.js"></script>
-		
-		<!-- Alpine.js framework. Docs: https://github.com/alpinejs/alpine -->
-		<script src="lib/alpine.min.js" defer></script>
-
-		<script src="js/common/helpers.js"></script>
-		<script src="lib/NoSleep.min.js?v=1"></script>
-
-		<link rel="stylesheet" href="styles/common/reset.css">
-		<link rel="stylesheet" href="styles/common/helpers.css">
-		<link rel="stylesheet" href="styles/common/buttons.css">
-
-		<!-- Tailwind CSS framework. Docs: https://tailwindcss.com/docs/container -->
-		<link href="lib/tailwind.min.css" rel="stylesheet">
-		
-		<link rel="stylesheet" href="styles/app/style.css">
-
-		<script>
-			'use strict';
-
-			var noSleep = new NoSleep()
-			
-			// region Disable zoom
-
-			document.addEventListener('gesturestart', function(e) {
-				e.preventDefault();
-			});
-			document.addEventListener('touchstart', function(e) {
-				if (e.target.tagName === 'LABEL' && e.target.children) {
-					for(var i = 0, len = e.target.childElementCount; i < len; i++) {
-						if (e.target.children[i].disabled) {
-							e.preventDefault();
-							return
-						}
-					}
+				// for(i = 0; i < count; i++) {
+				//  this._sound()
+				//  await delay(100)
+				// }
+	
+				var _this = this
+	
+				function _recursive() {
+				  if (i < count) {
+					return Promise.resolve().then(function () {
+					  _this._sound();
+					  return delay(500);
+					}).then(function () {
+					  i++;
+					  return _recursive();
+					});
+				  }
 				}
-			});
-
-			// endregion
-		</script>
-	</head>
-	<body>
-    <div
-      x-data="{
-		nightMode: false,
-        timer: {
-          time: 120 * 1000,
-          interval: 2 * 1000,
-          timeRemaining: 120 * 1000,
-          intervalRemaining: 2 * 1000,
-          started: false,
-          soundEnabled: false,
-          vibrateEnabled: false,
-          blinkEnabled: true,
-          isBlink: false,
-		  onIntervalEnd: false,
-          _sound: function () {
-            if (this.soundEnabled) {
-              beep(100, 440, 80)
-            }
-            if (this.vibrateEnabled && navigator.vibrate) {
-              navigator.vibrate(50)
-            }
-            if (this.blinkEnabled) {
-              var _this = this
-              _this.isBlink = true
-              setTimeout(function() {
-                _this.isBlink = false
-              }, 200)
-            }
-          },
-          sound: function(count) {
-            if (count == null) {
-              count = 1
-            }
-
-            // for(i = 0; i < count; i++) {
-            //  this._sound()
-            //  await delay(100)
-            // }
-
-            var _this = this
-
-            function _recursive() {
-              if (i < count) {
-                return Promise.resolve().then(function () {
-                  _this._sound();
-                  return delay(500);
-                }).then(function () {
-                  i++;
-                  return _recursive();
-                });
-              }
-            }
-
-            return Promise.resolve().then(function () {
-              i = 0;
-              return _recursive();
-            }).then(function () {});
-          },
-          _timer: null,
-          _tick: function(first) {
-            if (this.timeRemaining <= 0) {
-              this.stop()
-			  return
-            }
-
-            if (this.intervalRemaining <= 0) {
-              this.intervalRemaining = this.interval
-              this.sound(1)
-			  if (!first) {
-				  this.onIntervalEnd = false
-				  this.onIntervalEnd = true
-			  }
-            }
-
-            this.timeRemaining -= 1000
-            this.intervalRemaining -= 1000
-          },
-          start: function() {
-            this.stop()
-
-            this.timeRemaining = this.time
-            this.intervalRemaining = 0
-
-            this.started = true
-
-			noSleep.enable()
-			
-            var _this = this
-            _this._tick(true)
-            this._timer = setInterval(function() {
-              _this._tick(false)
-            }, 1000)
-          },
-          stop: function() {
-            if (this._timer) {
-              clearInterval(this._timer)
-              this._timer = null
-            }
-
-			if (this.started) {
-				this.sound(3)
-				this.onIntervalEnd = false
-				this.onIntervalEnd = true
-			}
-			
-            this.started = false
-			
-			noSleep.disable()
-          },
-          startStop: function() {
-            if (this.started) {
-              this.stop()
-            } else {
-              this.start()
-            }
-          },
-        },
-        counter: {
-          sessions: [{
-            log: [], // { time, value }
-          }],
-          sessionStat: function(session) {
-            if (!session) {
-              session = this.sessions[0]
-            }
-            var stat = session.log
-              .reduce(function(a, o) {
-                a[o.value] = (a[o.value] || 0) + 1
-                return a
-              }, {})
-            return stat
-          },
-          sessionReport: function() {
-            var stat = this.sessionStat()
-            var statStr = Object.keys(stat)
-              .map(function(value) {
-                return value + ': ' + stat[value]
-              })
-              .join('\n')
-            return statStr
-          },
-          sessionsStat: function(groupByTime) {
-            var _this = this
-            var groups = this.sessions
-              .filter(function(session) {
-                return session.log.length
-              })
-			  .reduce(function(groups, session) {
-				var time = session.log[session.log.length - 1].time
-				if (groupByTime) {
-					time -= time % groupByTime
+	
+				return Promise.resolve().then(function () {
+				  i = 0;
+				  return _recursive();
+				}).then(function () {});
+			  },
+			  _timer: null,
+			  _tick: function(first) {
+				if (this.timeRemaining <= 0) {
+				  this.stop()
+				  return
+				}
+	
+				if (this.intervalRemaining <= 0) {
+				  this.intervalRemaining = this.interval
+				  this.sound(1)
+				  if (!first) {
+					  this.onIntervalEnd = false
+					  this.onIntervalEnd = true
+				  }
+				}
+	
+				this.timeRemaining -= 1000
+				this.intervalRemaining -= 1000
+			  },
+			  start: function() {
+				this.stop()
+	
+				this.timeRemaining = this.time
+				this.intervalRemaining = 0
+	
+				this.started = true
+	
+				noSleep.enable()
+				
+				var _this = this
+				_this._tick(true)
+				this._timer = setInterval(function() {
+				  _this._tick(false)
+				}, 1000)
+			  },
+			  stop: function() {
+				if (this._timer) {
+				  clearInterval(this._timer)
+				  this._timer = null
+				}
+	
+				if (this.started) {
+					this.sound(3)
+					this.onIntervalEnd = false
+					this.onIntervalEnd = true
 				}
 				
-				var _stat = _this.sessionStat(session)
-				var sum = 0
-				var count = 0
+				this.started = false
 				
-				Object.keys(_stat)
-				  .forEach(function(value) {
-					sum += value * _stat[value]
-					count += _stat[value]
+				noSleep.disable()
+			  },
+			  startStop: function() {
+				if (this.started) {
+				  this.stop()
+				} else {
+				  this.start()
+				}
+			  },
+			},
+			counter: {
+			  sessions: [{
+				log: [], // { time, value }
+			  }],
+			  sessionStat: function(session) {
+				if (!session) {
+				  session = this.sessions[0]
+				}
+				var stat = session.log
+				  .reduce(function(a, o) {
+					a[o.value] = (a[o.value] || 0) + 1
+					return a
+				  }, {})
+				return stat
+			  },
+			  sessionReport: function() {
+				var stat = this.sessionStat()
+				var statStr = Object.keys(stat)
+				  .map(function(value) {
+					return value + ': ' + stat[value]
 				  })
-				
-				var group = groups[time]
-				if (!group) {
-					groups[time] = group = {
-						time: time,
-						sum: sum,
-						count: count,
+				  .join('\n')
+				return statStr
+			  },
+			  sessionsStat: function(groupByTime) {
+				var _this = this
+				var groups = this.sessions
+				  .filter(function(session) {
+					return session.log.length
+				  })
+				  .reduce(function(groups, session) {
+					var time = session.log[session.log.length - 1].time
+					if (groupByTime) {
+						time -= time % groupByTime
 					}
-				} else {
-					group.sum += sum
-					group.count += count
-				}
+					
+					var _stat = _this.sessionStat(session)
+					var sum = 0
+					var count = 0
+					
+					Object.keys(_stat)
+					  .forEach(function(value) {
+						sum += value * _stat[value]
+						count += _stat[value]
+					  })
+					
+					var group = groups[time]
+					if (!group) {
+						groups[time] = group = {
+							time: time,
+							sum: sum,
+							count: count,
+						}
+					} else {
+						group.sum += sum
+						group.count += count
+					}
+					
+					return groups
+				  }, {})
+				  
+				var stat = Object.values(groups)
 				
-				return groups
-			  }, {})
-			  
-            var stat = Object.values(groups)
-			
-            return stat
-          },
-		  reportPage: 0,
-		  _groupByTimes: [
-			0,
-			24 * 60 * 60 * 1000,
-			7 * 24 * 60 * 60 * 1000,
-			30 * 24 * 60 * 60 * 1000,
-		  ],
-		  nextPage: function() {
-			this.reportPage++
-			if (this.reportPage >= this._groupByTimes.length) {
-				this.reportPage = 0
-			}
-		  },
-          sessionsReport: function() {
-            var statStr = this.sessionsStat(this._groupByTimes[this.reportPage])
-              .map(function(stat) {
-                return dateTimeToString(stat.time) + '\t' + stat.sum + '\t' + stat.count + '\t' + (stat.sum / stat.count * 100).toFixed(0) + '%'
-              })
-              .join('\n')
-            return statStr
-          },
-          newSession: function() {
-            if (this.sessions[0].log.length > 0) {
-				if (this.sessions[0].log.length === 1 && !this.sessions[0].log[0].value) {
-					this.sessions[0].log.length = 0
-				} else {
-					this.sessions.unshift({ log: [] })			
+				return stat
+			  },
+			  reportPage: 0,
+			  _groupByTimes: [
+				0,
+				24 * 60 * 60 * 1000,
+				7 * 24 * 60 * 60 * 1000,
+				30 * 24 * 60 * 60 * 1000,
+			  ],
+			  nextPage: function() {
+				this.reportPage++
+				if (this.reportPage >= this._groupByTimes.length) {
+					this.reportPage = 0
 				}
-            }
-          },
-		  value: null,
-          addValue: function(value) {
-			if (value == null) {
-				value = this.value && parseInt(this.value) || 0
-				this.value = null
+			  },
+			  sessionsReport: function() {
+				var statStr = this.sessionsStat(this._groupByTimes[this.reportPage])
+				  .map(function(stat) {
+					return dateTimeToString(stat.time) + '\t' + stat.sum + '\t' + stat.count + '\t' + (stat.sum / stat.count * 100).toFixed(0) + '%'
+				  })
+				  .join('\n')
+				return statStr
+			  },
+			  newSession: function() {
+				if (this.sessions[0].log.length > 0) {
+					if (this.sessions[0].log.length === 1 && !this.sessions[0].log[0].value) {
+						this.sessions[0].log.length = 0
+					} else {
+						this.sessions.unshift({ log: [] })			
+					}
+				}
+			  },
+			  value: null,
+			  addValue: function(value) {
+				if (value == null) {
+					value = this.value && parseInt(this.value) || 0
+					this.value = null
+				}
+				this.sessions[0].log.unshift({
+				  time: Date.now(),
+				  value: value,
+				})
+			  },
+			  undo: function() {
+				if (this.sessions[0].log.length > 0) {
+				  this.sessions[0].log.shift()
+				}
+			  },
+			},
+			save: function () {
+			  state = {
+				nightMode: this.nightMode,
+				timer: {
+				  time: this.timer.time,
+				  interval: this.timer.interval,
+				  soundEnabled: this.timer.soundEnabled,
+				  vibrateEnabled: this.timer.vibrateEnabled,
+				  blinkEnabled: this.timer.blinkEnabled,
+				},
+				counter: {
+				  sessions: this.counter.sessions,
+				}
+			  }
+	
+			  localStorage.setItem('state', JSON.stringify(state))
+	
+			  // this.timer.sound()
 			}
-            this.sessions[0].log.unshift({
-              time: Date.now(),
-              value: value,
-            })
-          },
-          undo: function() {
-            if (this.sessions[0].log.length > 0) {
-              this.sessions[0].log.shift()
-            }
-          },
-        },
-        save: function () {
-          state = {
-			nightMode: this.nightMode,
-            timer: {
-              time: this.timer.time,
-              interval: this.timer.interval,
-              soundEnabled: this.timer.soundEnabled,
-              vibrateEnabled: this.timer.vibrateEnabled,
-              blinkEnabled: this.timer.blinkEnabled,
-            },
-            counter: {
-              sessions: this.counter.sessions,
-            }
-          }
-
-          localStorage.setItem('state', JSON.stringify(state))
-
-          // this.timer.sound()
-        }
-      }"
-      x-init="function() {
-        var state = JSON.parse(localStorage.getItem('state') || '{}')
-        nightMode = state.nightMode
-		if (state.timer) {
-          timer.time = state.timer.time
-          timer.interval = state.timer.interval
-          timer.soundEnabled = state.timer.soundEnabled
-          timer.vibrateEnabled = state.timer.vibrateEnabled
-          timer.blinkEnabled = state.timer.blinkEnabled
-        }
-        if (state.counter) {
-          counter.sessions = state.counter.sessions
-        }
-
-        $watch('nightMode', function() { save() })
-        $watch('timer.time', function() { save() })
-        $watch('timer.interval', function() { save() })
-        $watch('timer.soundEnabled', function() { save() })
-        $watch('timer.vibrateEnabled', function() { save() })
-        $watch('timer.blinkEnabled', function() { save() })
-        $watch('counter.sessions', function() { save() })
-        $watch('timer.started', function (started) {
-          counter.newSession()
-		  if (!timer.started) {
-			counter.reportPage = 0
-		  }
-        })
-        $watch('timer.onIntervalEnd', function (onIntervalEnd) {
-          if (onIntervalEnd) {
-			counter.addValue()
-			save()
-		  }
-        })
-
-        setTimeout(function() {
-          timer.started = !timer.started
-          timer.started = !timer.started
-        }, 1)
-      }"
-      class="absolute inset-0 counter flex flex-col p-0.5 bg-white"
-      :class="{blink: timer.isBlink, night: nightMode}"
-      >
-      <div class="counter__header flex">
-        <button class="flex-none m-1 h-12 w-12 button click-shift relative border border-black">
-          <span class="icon icon-mask icon--menu bg-black">&nbsp;</span>&nbsp;
-        </button>
-		<select class="flex-auto m-1 h-12 px-1.5 py-1 border border-black">
-		  <option></option>
-		</select>
-        <label class="no-select no-drag">
-          <input
-            type="checkbox"
-            class="collapsed-focus"
-            value="value"
-            x-model="nightMode"
-          />
-          <div
-            class="flex-none m-1 h-12 w-12 button click-shift checked-invert relative border border-black"
-            >
-            <span
-              class="icon icon-mask icon--weather-night bg-black"
-              >&nbsp;</span>&nbsp;
-          </div>
-        </label>
-      </div>
-      <div class="counter__buttons flex justify-between">
-		<template x-for="value in [0, 1]">
+		  }"
+			x-init="function() {
+			var state = JSON.parse(localStorage.getItem('state') || '{}')
+			nightMode = state.nightMode
+			if (state.timer) {
+			  timer.time = state.timer.time
+			  timer.interval = state.timer.interval
+			  timer.soundEnabled = state.timer.soundEnabled
+			  timer.vibrateEnabled = state.timer.vibrateEnabled
+			  timer.blinkEnabled = state.timer.blinkEnabled
+			}
+			if (state.counter) {
+			  counter.sessions = state.counter.sessions
+			}
+	
+			$watch('nightMode', function() { save() })
+			$watch('timer.time', function() { save() })
+			$watch('timer.interval', function() { save() })
+			$watch('timer.soundEnabled', function() { save() })
+			$watch('timer.vibrateEnabled', function() { save() })
+			$watch('timer.blinkEnabled', function() { save() })
+			$watch('counter.sessions', function() { save() })
+			$watch('timer.started', function (started) {
+			  counter.newSession()
+			  if (!timer.started) {
+				counter.reportPage = 0
+			  }
+			})
+			$watch('timer.onIntervalEnd', function (onIntervalEnd) {
+			  if (onIntervalEnd) {
+				counter.addValue()
+				save()
+			  }
+			})
+	
+			setTimeout(function() {
+			  timer.started = !timer.started
+			  timer.started = !timer.started
+			}, 1)
+		  }"
+			class="absolute inset-0 counter flex flex-col p-0.5 bg-white"
+			:class="{blink: timer.isBlink, night: nightMode}"
+	>
+		<div class="counter__header flex">
+			<button class="flex-none m-1 h-12 w-12 button click-shift relative border border-black">
+				<span class="icon icon-mask icon--menu bg-black">&nbsp;</span>&nbsp;
+			</button>
+			<select class="flex-auto m-1 h-12 px-1.5 py-1 border border-black">
+				<option></option>
+			</select>
 			<label class="no-select no-drag">
 				<input
-					type="radio"
-					group="value"
-					class="collapsed-focus"
-					:value="value"
-					x-model="counter.value"
-					:disabled="!timer.started || timer.interval - timer.intervalRemaining < 3000"
+						type="checkbox"
+						class="collapsed-focus"
+						value="value"
+						x-model="nightMode"
 				/>
 				<div
-					class="button click-shift checked-invert disabled-opacity m-1 w-36 h-36 relative border border-black"
-					x-on:touchstart="counter.value = value; if (timer.soundEnabled) { beep(100, 523.2511306, 80) }"
-					x-on:mousedown="counter.value = value; if (timer.soundEnabled) { beep(100, 523.2511306, 80) }"
-					>
-					<span
-						class="icon icon-mask bg-black"
-						:class="{['icon--numeric-' + value]: true}"
-						>&nbsp;</span>&nbsp;
+						class="flex-none m-1 h-12 w-12 button click-shift checked-invert relative border border-black"
+				>
+				<span
+						class="icon icon-mask icon--weather-night bg-black"
+				>&nbsp;</span>&nbsp;
 				</div>
 			</label>
-		</template>
-      </div>
-      <div class="counter__header timer flex">
-        <label class="no-select no-drag">
-          <input
-            type="checkbox"
-            class="collapsed-focus"
-            value="value"
-            x-model="timer.soundEnabled"
-          />
-          <div
-            class="flex-none m-1 h-12 w-12 button click-shift checked-invert relative border border-black"
-            >
-            <span
-              class="icon icon-mask icon--volume-high bg-black"
-              >&nbsp;</span>&nbsp;
-          </div>
-        </label>
-        <div
-          class="flex-1 m-1 h-12 px-1.5 py-1 border border-black bg-gray-200 font-bold content-center"
-          :class="{'collapsed': !timer.started}"
-          x-text="timeToString(timer.timeRemaining)"
-        ></div>
-        <div
-          class="flex-1 m-1 h-12 px-1.5 py-1 border border-black bg-gray-200 font-bold content-center"
-          :class="{'collapsed': !timer.started}"
-          x-text="timeToString(timer.intervalRemaining)"
-        ></div>
-        <select
-          class="flex-1 m-1 h-12 px-1.5 py-1 border border-black content-center"
-          x-model="timer.time"
-          :class="{'collapsed': timer.started}"
-          >
-          <template x-for="value in [60, 120, 180, 240, 300, 600, 900, 1200, 1500, 1800, 2400, 3600, 5400, 7200, 14400, 10800, 21600, 25200, 28800, 32400, 36000, 39600, 43200, 46800, 50400, 54000, 57600]">
-            <option :value="value * 1000" x-text="timeToString(value * 1000)"></option>
-          </template>
-        </select>
-        <select
-          class="flex-1 m-1 h-12 px-1.5 py-1 border border-black content-center"
-          x-model="timer.interval"
-          :class="{'collapsed': timer.started}">
-          <template x-for="value in [1, 2, 3, 4, 5, 10, 15, 20, 30, 40, 60, 120, 180, 240, 300, 600, 900, 1200, 1500, 1800, 2400, 3600, 5400, 7200]">
-            <option :value="value * 1000" x-text="timeToString(value * 1000)"></option>
-          </template>
-        </select>
-        <button
-          class="flex-none m-1 h-12 w-12 button click-shift checked-invert relative border border-black"
-          x-on:click="timer.startStop()"
-          :class="{'bg-gray-200': timer.started}"
-          >
-          <span
-            class="icon icon-mask bg-black"
-            :class="{
-              'icon--play': !timer.started,
-              'icon--stop': timer.started,
-            }"
-            >&nbsp;</span>&nbsp;
-        </button>
-      </div>
-      <div class="counter__content flex-auto slider flex flex-col">
-        <div
-	      class="flex-auto log flex flex-col m-1 px-1.5 py-0.5 border border-black relative overflow-y-auto"
-	      x-on:click="if (!timer.started) { counter.nextPage() }"
-	    >
-          <div class="absolute flex-auto whitespace-pre" x-text="timer.started ? counter.sessionReport() : counter.sessionsReport()"></div>
-        </div>
-      </div>
-    </div>
-
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const loadEl = document.querySelector('#load');
-        // The Firebase SDK is initialized and available here!
-		
-        // firebase.auth().onAuthStateChanged(user => { });
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        // firebase.firestore().doc('/foo/bar').get().then(() => { });
-        // firebase.functions().httpsCallable('yourFunction')().then(() => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-        // firebase.analytics(); // call to activate
-        // firebase.analytics().logEvent('tutorial_completed');
-        // firebase.performance(); // call to activate
-
-        try {
-          let app = firebase.app();
-          let features = [
-            'auth', 
-            'database', 
-            'firestore',
-            'functions',
-            'messaging', 
-            'storage', 
-            'analytics', 
-            'remoteConfig',
-            'performance',
-          ].filter(feature => typeof app[feature] === 'function')
-		  
-		  console.log('Firebase SDK loaded with: ' + features.join(', '))
-		  
-		  var googleAuthProvider = new firebase.auth.GoogleAuthProvider();
-		  
-		  firebase
-			.auth()
-			.signInWithPopup(googleAuthProvider)
-				.then((result) => {
-					/** @type {firebase.auth.OAuthCredential} */
-					var credential = result.credential;
-
-					// This gives you a Google Access Token. You can use it to access the Google API.
-					var token = credential.accessToken;
-					// The signed-in user info.
-					var user = result.user;
-					
-					console.log({credential, token, user})
-				})
-				.catch((error) => {
-					// Handle Errors here.
-					var errorCode = error.code;
-					var errorMessage = error.message;
-					// The email of the user's account used.
-					var email = error.email;
-					// The firebase.auth.AuthCredential type that was used.
-					var credential = error.credential;
-
-					console.log({credential, email, errorCode, errorMessage})
-				})
-        } catch (e) {
-          console.error(e)
-        }
-      });
-    </script>
+		</div>
+		<div class="counter__buttons flex justify-between">
+			<template x-for="value in [0, 1]">
+				<label class="no-select no-drag">
+					<input
+							type="radio"
+							group="value"
+							class="collapsed-focus"
+							:value="value"
+							x-model="counter.value"
+							:disabled="!timer.started || timer.interval - timer.intervalRemaining < 3000"
+					/>
+					<div
+							class="button click-shift checked-invert disabled-opacity m-1 w-36 h-36 relative border border-black"
+							x-on:touchstart="counter.value = value; if (timer.soundEnabled) { beep(100, 523.2511306, 80) }"
+							x-on:mousedown="counter.value = value; if (timer.soundEnabled) { beep(100, 523.2511306, 80) }"
+					>
+						<span
+								class="icon icon-mask bg-black"
+								:class="{['icon--numeric-' + value]: true}"
+						>&nbsp;</span>&nbsp;
+					</div>
+				</label>
+			</template>
+		</div>
+		<div class="counter__header timer flex">
+			<label class="no-select no-drag">
+				<input
+						type="checkbox"
+						class="collapsed-focus"
+						value="value"
+						x-model="timer.soundEnabled"
+				/>
+				<div
+						class="flex-none m-1 h-12 w-12 button click-shift checked-invert relative border border-black"
+				>
+				<span
+						class="icon icon-mask icon--volume-high bg-black"
+				>&nbsp;</span>&nbsp;
+				</div>
+			</label>
+			<div
+					class="flex-1 m-1 h-12 px-1.5 py-1 border border-black bg-gray-200 font-bold content-center"
+					:class="{'collapsed': !timer.started}"
+					x-text="timeToString(timer.timeRemaining)"
+			></div>
+			<div
+					class="flex-1 m-1 h-12 px-1.5 py-1 border border-black bg-gray-200 font-bold content-center"
+					:class="{'collapsed': !timer.started}"
+					x-text="timeToString(timer.intervalRemaining)"
+			></div>
+			<select
+					class="flex-1 m-1 h-12 px-1.5 py-1 border border-black content-center"
+					x-model="timer.time"
+					:class="{'collapsed': timer.started}"
+			>
+				<template x-for="value in [60, 120, 180, 240, 300, 600, 900, 1200, 1500, 1800, 2400, 3600, 5400, 7200, 14400, 10800, 21600, 25200, 28800, 32400, 36000, 39600, 43200, 46800, 50400, 54000, 57600]">
+					<option :value="value * 1000" x-text="timeToString(value * 1000)"></option>
+				</template>
+			</select>
+			<select
+					class="flex-1 m-1 h-12 px-1.5 py-1 border border-black content-center"
+					x-model="timer.interval"
+					:class="{'collapsed': timer.started}">
+				<template x-for="value in [1, 2, 3, 4, 5, 10, 15, 20, 30, 40, 60, 120, 180, 240, 300, 600, 900, 1200, 1500, 1800, 2400, 3600, 5400, 7200]">
+					<option :value="value * 1000" x-text="timeToString(value * 1000)"></option>
+				</template>
+			</select>
+			<button
+					class="flex-none m-1 h-12 w-12 button click-shift checked-invert relative border border-black"
+					x-on:click="timer.startStop()"
+					:class="{'bg-gray-200': timer.started}"
+			>
+			  <span
+					  class="icon icon-mask bg-black"
+					  :class="{
+				  'icon--play': !timer.started,
+				  'icon--stop': timer.started,
+				}"
+			  >&nbsp;</span>&nbsp;
+			</button>
+		</div>
+		<div class="counter__content flex-auto slider flex flex-col">
+			<div
+					class="flex-auto log flex flex-col m-1 px-1.5 py-0.5 border border-black relative overflow-y-auto"
+					x-on:click="if (!timer.started) { counter.nextPage() }"
+			>
+				<div class="absolute flex-auto whitespace-pre" x-text="timer.started ? counter.sessionReport() : counter.sessionsReport()"></div>
+			</div>
+		</div>
+	</div>
+	
+	<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			const loadEl = document.querySelector('#load');
+			// The Firebase SDK is initialized and available here!
+	
+			// firebase.auth().onAuthStateChanged(user => { });
+			// firebase.database().ref('/path/to/ref').on('value', snapshot => { });
+			// firebase.firestore().doc('/foo/bar').get().then(() => { });
+			// firebase.functions().httpsCallable('yourFunction')().then(() => { });
+			// firebase.messaging().requestPermission().then(() => { });
+			// firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
+			// firebase.analytics(); // call to activate
+			// firebase.analytics().logEvent('tutorial_completed');
+			// firebase.performance(); // call to activate
+	
+			try {
+				let app = firebase.app();
+				let features = [
+					'auth',
+					'database',
+					'firestore',
+					'functions',
+					'messaging',
+					'storage',
+					'analytics',
+					'remoteConfig',
+					'performance',
+				].filter(feature => typeof app[feature] === 'function')
+	
+				console.log('Firebase SDK loaded with: ' + features.join(', '))
+	
+				var googleAuthProvider = new firebase.auth.GoogleAuthProvider();
+	
+				firebase
+					.auth()
+					.signInWithPopup(googleAuthProvider)
+					.then((result) => {
+						/** @type {firebase.auth.OAuthCredential} */
+						var credential = result.credential;
+	
+						// This gives you a Google Access Token. You can use it to access the Google API.
+						var token = credential.accessToken;
+						// The signed-in user info.
+						var user = result.user;
+	
+						console.log({credential, token, user})
+					})
+					.catch((error) => {
+						// Handle Errors here.
+						var errorCode = error.code;
+						var errorMessage = error.message;
+						// The email of the user's account used.
+						var email = error.email;
+						// The firebase.auth.AuthCredential type that was used.
+						var credential = error.credential;
+	
+						console.log({credential, email, errorCode, errorMessage})
+					})
+			} catch (e) {
+				console.error(e)
+			}
+		});
+	</script>
 </body>
 </html>
