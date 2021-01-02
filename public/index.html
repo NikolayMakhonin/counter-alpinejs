@@ -603,6 +603,8 @@
 					var token = credential.accessToken;
 					// The signed-in user info.
 					var user = result.user;
+					
+					console.log({credential, token, user})
 				})
 				.catch((error) => {
 					// Handle Errors here.
@@ -612,6 +614,8 @@
 					var email = error.email;
 					// The firebase.auth.AuthCredential type that was used.
 					var credential = error.credential;
+
+					console.log({credential, email, errorCode, errorMessage})
 				})
         } catch (e) {
           console.error(e)
