@@ -51,6 +51,21 @@
   mask-image: url(../../assets/icons/menu.svg);
 }
 
+.icon--account-cancel-outline {
+  -webkit-mask-image: url(../../assets/icons/account-cancel-outline.svg);
+  mask-image: url(../../assets/icons/account-cancel-outline.svg);
+}
+
+.icon--account-check {
+  -webkit-mask-image: url(../../assets/icons/account-check.svg);
+  mask-image: url(../../assets/icons/account-check.svg);
+}
+
+.icon--arrow-left {
+  -webkit-mask-image: url(../../assets/icons/arrow-left.svg);
+  mask-image: url(../../assets/icons/arrow-left.svg);
+}
+
 .icon--weather-night {
   -webkit-mask-image: url(../../assets/icons/weather-night.svg);
   mask-image: url(../../assets/icons/weather-night.svg);
