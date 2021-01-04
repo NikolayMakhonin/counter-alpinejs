@@ -532,7 +532,10 @@
 	      class="flex-auto log flex flex-col m-1 px-1.5 py-0.5 border border-black relative overflow-y-auto"
 	      x-on:click="if (!timer.started) { counter.nextPage() }"
 	    >
-          <div class="absolute flex-auto whitespace-pre" x-text="timer.started ? counter.sessionReport() : counter.sessionsReport()"></div>
+          <div class="absolute flex-auto whitespace-pre select-all" x-text="
+			return JSON.stringify(counter.sessions)
+			// timer.started ? counter.sessionReport() : counter.sessionsReport()
+		  "></div>
         </div>
       </div>
     </div>
