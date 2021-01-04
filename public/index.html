@@ -206,6 +206,14 @@
 			}
 		}
 		
+		function dateToString(date) {
+			if (typeof date !== 'number') {
+				date = date.getTime()
+			}
+			
+			return date.toString().padStart(15, '0')
+		}
+		
 		function alpineCounter() {
 			var data = {
 				nightMode: false,
@@ -347,23 +355,63 @@
 					},
 				},				
 				counter: {
-					sessions: [{
-						log: [], // { time, value }
-					}],
+					sessionDate: null,
+					newSession: function() {
+						this.sessionDate = Date.now()
+					},
+					value: null,
+					addValue: function(db, uid, value) {
+						if (value == null) {
+							value = this.value && parseInt(this.value) || 0
+							this.value = null
+						}
+
+						if (!this.sessionDate) {
+							throw new Error('this.sessionDate is empty')
+						}
+						
+						var date = Date.now()
+						
+						db.ref(
+							'counter/' + uid
+							+ '/sessions/' + dateToString(this.sessionDate)
+						)
+							.update({
+								date: this.sessionDate,
+								['events/' + dateToString(date)]: {
+									date: date,
+									value: value,
+								},
+							})
+							.catch(function(err) {
+								console.log(err)
+							})
+					},
+
+					// reports
+					
+					sessions: null,					
 					sessionStat: function(session) {
 						if (!session) {
-							session = this.sessions[0]
+							session = this.sessions && this.sessions[dateToString(this.sessionDate)]
+							if (!session) {
+								return null
+							}
 						}
-						var stat = session.log
-							.reduce(function(a, o) {
-								a[o.value] = (a[o.value] || 0) + 1
+						
+						
+						var stat = Object.keys(session.events)
+							.reduce(function(a, key) {
+								var event = session.events[key]
+								a[event.value] = (a[event.value] || 0) + 1
 								return a
 							}, {})
+							
 						return stat
 					},
 					sessionReport: function() {
 						var stat = this.sessionStat()
-						var statStr = Object.keys(stat)
+						var statStr = stat && Object.keys(stat)
 							.map(function(value) {
 								return value + ': ' + stat[value]
 							})
@@ -372,14 +420,13 @@
 					},
 					sessionsStat: function(groupByTime) {
 						var _this = this
-						var groups = this.sessions
-							.filter(function(session) {
-								return session.log.length
-							})
-							.reduce(function(groups, session) {
-								var time = session.log[session.log.length - 1].time
+						var groups = _this.sessions && Object.keys(_this.sessions)
+							.reduce(function(groups, key) {
+								var session = _this.sessions[key]
+								
+								var date = session.date
 								if (groupByTime) {
-									time -= time % groupByTime
+									date -= date % groupByTime
 								}
 
 								var _stat = _this.sessionStat(session)
@@ -392,10 +439,10 @@
 										count += _stat[value]
 									})
 
-								var group = groups[time]
+								var group = groups[date]
 								if (!group) {
-									groups[time] = group = {
-										time: time,
+									groups[date] = group = {
+										date: date,
 										sum: sum,
 										count: count,
 									}
@@ -406,11 +453,12 @@
 
 								return groups
 							}, {})
-
-						var stat = Object.values(groups)
+						
+						var stat = groups && Object.values(groups).reverse()
 
 						return stat
 					},
+
 					reportPage: 0,
 					_groupByTimes: [
 						0,
@@ -425,37 +473,15 @@
 						}
 					},
 					sessionsReport: function() {
-						var statStr = this.sessionsStat(this._groupByTimes[this.reportPage])
+						var stat = this.sessionsStat(this._groupByTimes[this.reportPage])
+						
+						var statStr = stat && stat
 							.map(function(stat) {
-								return dateTimeToString(stat.time) + '\t' + stat.sum + '\t' + stat.count + '\t' + (stat.sum / stat.count * 100).toFixed(0) + '%'
+								return dateTimeToString(stat.date) + '\t' + stat.sum + '\t' + stat.count + '\t' + (stat.sum / stat.count * 100).toFixed(0) + '%'
 							})
 							.join('\n')
+							
 						return statStr
-					},
-					newSession: function() {
-						if (this.sessions[0].log.length > 0) {
-							if (this.sessions[0].log.length === 1 && !this.sessions[0].log[0].value) {
-								this.sessions[0].log.length = 0
-							} else {
-								this.sessions.unshift({ log: [] })
-							}
-						}
-					},
-					value: null,
-					addValue: function(value) {
-						if (value == null) {
-							value = this.value && parseInt(this.value) || 0
-							this.value = null
-						}
-						this.sessions[0].log.unshift({
-							time: Date.now(),
-							value: value,
-						})
-					},
-					undo: function() {
-						if (this.sessions[0].log.length > 0) {
-							this.sessions[0].log.shift()
-						}
 					},
 				},
 				save: function () {
@@ -476,6 +502,7 @@
 					localStorage.setItem('state', JSON.stringify(state))
 					
 					// Save to FireBase
+					/*
 					if (this.firebase.user) {
 						var sessions = this.counter.sessions
 							.filter(function(session) { return session.log.length })
@@ -502,6 +529,7 @@
 								console.log(err)
 							})
 					}
+					*/
 					
 					// this.timer.sound()
 				},
@@ -517,9 +545,9 @@
 						this.timer.vibrateEnabled = state.timer.vibrateEnabled
 						this.timer.blinkEnabled = state.timer.blinkEnabled
 					}
-					if (state.counter) {
-						this.counter.sessions = state.counter.sessions
-					}
+					<!-- if (state.counter) { -->
+						<!-- this.counter.sessions = state.counter.sessions -->
+					<!-- } -->
 
 					this.$watch('nightMode', function() { _this.save() })
 					this.$watch('timer.time', function() { _this.save() })
@@ -536,7 +564,7 @@
 					})
 					this.$watch('timer.onIntervalEnd', function (onIntervalEnd) {
 						if (onIntervalEnd) {
-							_this.counter.addValue()
+							_this.counter.addValue(_this.firebase.db, _this.firebase.user.uid)
 							_this.save()
 						}
 					})
@@ -556,9 +584,15 @@
 							if (user && _this.page === 'auth') {
 								_this.page = 'counter'
 							}
+
+							_this.firebase.db.ref().off()
 							
 							if (user) {
 								_this.save()
+								_this.firebase.db.ref('counter/' + _this.firebase.user.uid + '/sessions')
+									.on('value', function(sessions) {
+										_this.counter.sessions = sessions.val()
+									})
 							}
 						})
 					
