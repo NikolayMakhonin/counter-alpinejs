@@ -484,7 +484,7 @@
 						return statStr
 					},
 				},
-				save: function () {
+				saveState: function () {
 					var state = {
 						nightMode: this.nightMode,
 						timer: {
@@ -494,48 +494,16 @@
 							vibrateEnabled: this.timer.vibrateEnabled,
 							blinkEnabled: this.timer.blinkEnabled,
 						},
-						counter: {
-							sessions: this.counter.sessions,
-						}
 					}
 
 					localStorage.setItem('state', JSON.stringify(state))
-					
-					// Save to FireBase
-					/*
-					if (this.firebase.user) {
-						var sessions = this.counter.sessions
-							.filter(function(session) { return session.log.length })
-							.reduce(function(sessions, session) {
-								var dateFrom = session.log.reduce(function(a, o) {
-									return o.time < a ? o.time : a
-								}, session.log[0].time)
-								
-								sessions[dateFrom.toString().padStart(15, '0')] = {
-									events: session.log.reduce(function(events, event) {
-										events[event.time.toString().padStart(15, '0')] = {
-											date: event.time,
-											value: event.value,
-										}
-										return events
-									}, {}),
-								}
-								
-								return sessions
-							}, {})
-
-						this.firebase.db.ref('counter/' + this.firebase.user.uid + '/sessions').set(sessions)
-							.catch(function(err) {
-								console.log(err)
-							})
-					}
-					*/
 					
 					// this.timer.sound()
 				},
 				init: function() {
 					var _this = this
 					
+					// loadState
 					var state = JSON.parse(localStorage.getItem('state') || '{}')
 					this.nightMode = state.nightMode
 					if (state.timer) {
@@ -545,17 +513,13 @@
 						this.timer.vibrateEnabled = state.timer.vibrateEnabled
 						this.timer.blinkEnabled = state.timer.blinkEnabled
 					}
-					<!-- if (state.counter) { -->
-						<!-- this.counter.sessions = state.counter.sessions -->
-					<!-- } -->
 
-					this.$watch('nightMode', function() { _this.save() })
-					this.$watch('timer.time', function() { _this.save() })
-					this.$watch('timer.interval', function() { _this.save() })
-					this.$watch('timer.soundEnabled', function() { _this.save() })
-					this.$watch('timer.vibrateEnabled', function() { _this.save() })
-					this.$watch('timer.blinkEnabled', function() { _this.save() })
-					this.$watch('counter.sessions', function() { _this.save() })
+					this.$watch('nightMode', function() { _this.saveState() })
+					this.$watch('timer.time', function() { _this.saveState() })
+					this.$watch('timer.interval', function() { _this.saveState() })
+					this.$watch('timer.soundEnabled', function() { _this.saveState() })
+					this.$watch('timer.vibrateEnabled', function() { _this.saveState() })
+					this.$watch('timer.blinkEnabled', function() { _this.saveState() })
 					this.$watch('timer.started', function (started) {
 						_this.counter.newSession()
 						if (!_this.timer.started) {
@@ -565,7 +529,6 @@
 					this.$watch('timer.onIntervalEnd', function (onIntervalEnd) {
 						if (onIntervalEnd) {
 							_this.counter.addValue(_this.firebase.db, _this.firebase.user.uid)
-							_this.save()
 						}
 					})
 					
@@ -588,7 +551,6 @@
 							_this.firebase.db.ref().off()
 							
 							if (user) {
-								_this.save()
 								_this.firebase.db.ref('counter/' + _this.firebase.user.uid + '/sessions')
 									.on('value', function(sessions) {
 										_this.counter.sessions = sessions.val()
@@ -734,9 +696,10 @@
 					</template>
 				</select>
 				<button
-					class="flex-none m-1 h-12 w-12 button click-shift checked-invert relative border border-black"
+					class="flex-none m-1 h-12 w-12 button click-shift checked-invert disabled-opacity relative border border-black"
 					x-on:click="timer.startStop()"
 					:class="{'bg-gray-200': timer.started}"
+					:disabled="!firebase.user"
 				>
 					<span
 						class="icon icon-mask bg-black"
