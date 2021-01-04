@@ -562,10 +562,14 @@
 
 					this.$watch('nightMode', function() { _this.saveState() })
 					this.$watch('timer.time', function(value) {
-						_this.firebase.db.ref('counter/' + uid + '/options/timer/time').set(value)
+						if (value) {
+							_this.firebase.db.ref('counter/' + _this.firebase.user.uid + '/options/timer/time').set(parseInt(value))
+						}
 					})
 					this.$watch('timer.interval', function(value) {
-						_this.firebase.db.ref('counter/' + uid + '/options/timer/interval').set(value)
+						if (value) {
+							_this.firebase.db.ref('counter/' + _this.firebase.user.uid + '/options/timer/interval').set(parseInt(value))
+						}
 					})
 					this.$watch('timer.soundEnabled', function() { _this.saveState() })
 					this.$watch('timer.vibrateEnabled', function() { _this.saveState() })

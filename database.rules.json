@@ -1,7 +1,54 @@
 {
-  /* Visit https://firebase.google.com/docs/database/security to learn more about security rules. */
-  "rules": {
-    ".read": false,
-    ".write": false
-  }
+	"rules": {
+		"counter": {
+			"$uid": {
+				".read": "auth !== null && auth.uid === $uid",
+				".write": "auth !== null && auth.uid === $uid",
+				"options": {
+					"timer": {
+						"time": {
+							".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= 24 * 60 * 60 * 1000",
+						},
+						"interval": {
+							".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= 24 * 60 * 60 * 1000",
+						},
+						"$other": {
+							".validate": false
+						}
+					}
+				},
+				"sessions": {
+					"$sessionId": {
+						".validate": "newData.hasChildren(['events']) && newData.child('events').hasChildren()",
+						"date": {
+							".validate": "newData.isNumber() && newData.val() > now - 10 * 366 * 24 * 60 * 60 * 1000 && newData.val() <= now + 24 * 60 * 60 * 1000",
+						},
+						"events": {
+							"$eventsId": {
+								".validate": "newData.hasChildren(['date', 'value'])",
+								"date": {
+									".validate": "newData.isNumber() && newData.val() > now - 10 * 366 * 24 * 60 * 60 * 1000 && newData.val() <= now + 24 * 60 * 60 * 1000",
+								},
+								"value": {
+									".validate": "newData.isNumber() && newData.val() >= 0 && newData.val() <= 100",
+								},
+								"$other": {
+									".validate": false
+								}
+							}
+						},
+						"$other": {
+							".validate": false
+						}
+					}
+				},
+				"$other": {
+					".validate": false
+				}
+			}
+		},
+		"$other": {
+			".validate": false
+		}
+	}
 }
