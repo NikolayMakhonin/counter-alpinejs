@@ -73,8 +73,12 @@ var beep = (function() {
 	}
 
 	// from: https://stackoverflow.com/a/49077414/5221762
-	var audioContext = new window.AudioContext()
+	var audioContext = null
 	return function beep(gain, frequency, duration){
+		if (!audioContext) {
+			audioContext = new window.AudioContext()
+		}
+		
 		console.log("Gain:" + gain, "Hz:" + frequency, "ms:" + duration)
 		oscillatorNode = audioContext.createOscillator()
 		gainNode = audioContext.createGain()

@@ -1,8 +1,7 @@
 {
 	"name": "Counter",
 	"short_name": "Counter",
-	"start_url": "https://counter-f4e44.web.app/",
-	"scope": "https://counter-f4e44.web.app/",
+	"start_url": "/",
 	"display": "minimal-ui",
 	"background_color": "#ffffff",
 	"theme_color": "#333333",
