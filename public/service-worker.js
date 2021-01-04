@@ -126,10 +126,11 @@ self.addEventListener("fetch", function(event) {
   event.respondWith(catchLog(caches
 	.match(event.request)
 	.then(function(res) {
-		return res || fetch(event.request).then(res => {
-			cache.open(ASSETS).put(event.request, res.clone())
-			return res
-		})
+		return res || fetch(event.request)
+			// .then(res => {
+				// caches.open(ASSETS).put(event.request, res.clone())
+				// return res
+			// })
     })
   ))
 })
