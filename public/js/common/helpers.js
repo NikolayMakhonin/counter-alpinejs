@@ -3,7 +3,7 @@ function timeToString(time) {
 		return '-'
 	}
   
-	let negative
+	var negative
 	if (time < 0) {
 		negative = true
 		time = -time

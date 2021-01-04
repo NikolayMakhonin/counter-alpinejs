@@ -169,8 +169,8 @@
 	<script>
 		function firebaseInit() {
 			try {
-				let app = firebase.app();
-				let features = [
+				var app = firebase.app();
+				var features = [
 					'auth',
 					'database',
 					'firestore',
@@ -180,7 +180,9 @@
 					'analytics',
 					'remoteConfig',
 					'performance',
-				].filter(feature => typeof app[feature] === 'function')
+				].filter(function(feature) {
+					typeof app[feature] === 'function'
+				})
 	
 				console.log('Firebase SDK loaded with: ' + features.join(', '))
 	
@@ -213,6 +215,7 @@
 					authPage: null,
 					user: null,
 					app: null,
+					db: null,
 					ui: null,
 					signIn: function(refs) {
 						this.ui.start(refs['firebase.authPage'], {
@@ -456,7 +459,7 @@
 					},
 				},
 				save: function () {
-					state = {
+					var state = {
 						nightMode: this.nightMode,
 						timer: {
 							time: this.timer.time,
@@ -471,7 +474,35 @@
 					}
 
 					localStorage.setItem('state', JSON.stringify(state))
+					
+					// Save to FireBase
+					if (this.firebase.user) {
+						var sessions = this.counter.sessions
+							.filter(function(session) { return session.log.length })
+							.reduce(function(sessions, session) {
+								var dateFrom = session.log.reduce(function(a, o) {
+									return o.time < a ? o.time : a
+								}, session.log[0].time)
+								
+								sessions[dateFrom.toString().padStart(15, '0')] = {
+									events: session.log.reduce(function(events, event) {
+										events[event.time.toString().padStart(15, '0')] = {
+											date: event.time,
+											value: event.value,
+										}
+										return events
+									}, {}),
+								}
+								
+								return sessions
+							}, {})
 
+						this.firebase.db.ref('counter/' + this.firebase.user.uid + '/sessions').set(sessions)
+							.catch(function(err) {
+								console.log(err)
+							})
+					}
+					
 					// this.timer.sound()
 				},
 				init: function() {
@@ -525,7 +556,13 @@
 							if (user && _this.page === 'auth') {
 								_this.page = 'counter'
 							}
+							
+							if (user) {
+								_this.save()
+							}
 						})
+					
+					this.firebase.db = this.firebase.app.database()
 					
 					// endregion
 
