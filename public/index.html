@@ -8,7 +8,7 @@
 	<link rel="icon" href="favicon.ico" type="image/x-icon" />
 
 	<!-- PWA -->
-	<!-- <base href="/" /> -->
+	<base href="/" />
 	<link rel="manifest" href="manifest.json" />
 
 	<!-- region Error handling -->
@@ -90,6 +90,8 @@
 
 	<!-- endregion -->
 
+	<script src="js/common/service-worker-register.js"></script>
+
 	<!-- region Firebase -->
 
 	<!-- update the version number as needed -->
@@ -118,8 +120,6 @@
 	<!-- endregion -->
 	
 	<!-- endregion -->
-
-	<script src="js/common/service-worker-register.js"></script>
 
 	<!-- Alpine.js framework. Docs: https://github.com/alpinejs/alpine -->
 	<script src="lib/alpine.min.js" defer></script>
@@ -798,5 +798,20 @@
 			<span class="icon icon-mask icon--arrow-left bg-black">&nbsp;</span>&nbsp;
 		</button>
 	</div>
+	
+	<!-- <script> -->
+		<!-- if ("serviceWorker" in navigator) { -->
+			<!-- window.addEventListener("load", function() { -->
+				<!-- navigator.serviceWorker -->
+					<!-- .register("js/common/service-worker.js") -->
+					<!-- .then(function(res) { -->
+						<!-- console.log("service worker registered") -->
+					<!-- }) -->
+					<!-- .catch(function(err) { -->
+						<!-- console.log("service worker not registered", err) -->
+					<!-- }) -->
+			<!-- }) -->
+		<!-- } -->
+	<!-- </script> -->
 </body>
 </html>

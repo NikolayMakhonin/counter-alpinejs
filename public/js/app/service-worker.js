@@ -6,10 +6,19 @@ var ASSETS = "cache".concat(timestamp);
 
 // use: dir /s/b > list.txt
 const assets = [
-	"/components.html",
+	"/__/firebase/8.2.1/firebase-app.js",
+	"/__/firebase/8.2.1/firebase-auth.js",
+	"/__/firebase/8.2.1/firebase-database.js",
+	"/__/firebase/8.2.1/firebase-firestore.js",
+	"/__/firebase/8.2.1/firebase-functions.js",
+	"/__/firebase/8.2.1/firebase-messaging.js",
+	"/__/firebase/8.2.1/firebase-storage.js",
+	"/__/firebase/8.2.1/firebase-analytics.js",
+	"/__/firebase/8.2.1/firebase-remote-config.js",
+	"/__/firebase/8.2.1/firebase-performance.js",
+	"/__/firebase/init.js",
 	"/favicon.ico",
 	"/index.html",
-	"/list.txt",
 	"/manifest.json",
 	"/assets/icons/account-cancel-outline.svg",
 	"/assets/icons/account-check.svg",
@@ -24,9 +33,6 @@ const assets = [
 	"/assets/icons/undo.svg",
 	"/assets/icons/volume-high.svg",
 	"/assets/icons/weather-night.svg",
-	"/assets/sounds/click-1.mp3",
-	"/assets/sounds/click-2.mp3",
-	"/assets/sounds/click-3.mp3",
 	"/js/common/helpers.js",
 	"/js/common/service-worker-register.js",
 	"/js/common/service-worker.js",
@@ -121,7 +127,10 @@ self.addEventListener("fetch", function(event) {
   event.respondWith(catchLog(caches
 	.match(event.request)
 	.then(function(res) {
-		return res || fetch(event.request)
+		return res || fetch(event.request).then(res => {
+			cache.open(ASSETS).put(event.request, res.clone())
+			return res
+		})
     })
   ))
 })
