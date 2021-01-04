@@ -1,4 +1,5 @@
-[type=button], [type=color], [type=reset], [type=submit], button {
+/* [type=button], [type=color], [type=reset], [type=submit], button { */
+.button {
 	align-items: normal;
 	background-color: transparent;
 	background-image: none;
@@ -43,77 +44,84 @@
 	zoom: inherit;
 }
 
-[type=button]::-moz-focus-inner, [type=color]::-moz-focus-inner,
-[type=reset]::-moz-focus-inner, [type=submit]::-moz-focus-inner,
-button::-moz-focus-inner {
+/* [type=button]::-moz-focus-inner, [type=color]::-moz-focus-inner, */
+/* [type=reset]::-moz-focus-inner, [type=submit]::-moz-focus-inner, */
+/* button::-moz-focus-inner { */
+.button::-moz-focus-inner {
 	border: 0;
 	padding: 0;
 }
 
-[type=file]::-webkit-file-upload-button {
-	align-items: normal;
-	background-color: transparent;
-	background-image: none;
-	box-sizing: inherit;
-	color: inherit;
-	cursor: auto;
-	display: inline-block;
-	vertical-align: middle;
-	font-style: inherit;
-	font-variant-ligatures: inherit;
-	font-variant-caps: inherit;
-	font-variant-numeric: inherit;
-	font-variant-east-asian: inherit;
-	font-weight: inherit;
-	font-stretch: inherit;
-	font-size: 100%;
-	line-height: inherit;
-	font-family: inherit;
-	letter-spacing: inherit;
-	margin: 0;
-	padding: 0;
-	text-align: start;
-	text-indent: 0;
-	text-rendering: inherit;
-	text-shadow: inherit;
-	text-transform: inherit;
-	-webkit-appearance: inherit;
-	-webkit-font-smoothing: inherit;
-	-webkit-writing-mode: inherit;
-	word-spacing: 0;
-	border: 0 solid #000;
-	-moz-appearance: inherit;
-	-moz-osx-font-smoothing: inherit;
-	-moz-user-select: inherit;
-	overflow-clip-box: inherit;
-	padding-block-end: 0;
-	padding-block-start: 0;
-	padding-inline-end: 0;
-	padding-inline-start: 0;
-	white-space: normal;
-	overflow: visible;
-	zoom: inherit;
-}
+/* [type=file]::-webkit-file-upload-button { */
+	/* align-items: normal; */
+	/* background-color: transparent; */
+	/* background-image: none; */
+	/* box-sizing: inherit; */
+	/* color: inherit; */
+	/* cursor: auto; */
+	/* display: inline-block; */
+	/* vertical-align: middle; */
+	/* font-style: inherit; */
+	/* font-variant-ligatures: inherit; */
+	/* font-variant-caps: inherit; */
+	/* font-variant-numeric: inherit; */
+	/* font-variant-east-asian: inherit; */
+	/* font-weight: inherit; */
+	/* font-stretch: inherit; */
+	/* font-size: 100%; */
+	/* line-height: inherit; */
+	/* font-family: inherit; */
+	/* letter-spacing: inherit; */
+	/* margin: 0; */
+	/* padding: 0; */
+	/* text-align: start; */
+	/* text-indent: 0; */
+	/* text-rendering: inherit; */
+	/* text-shadow: inherit; */
+	/* text-transform: inherit; */
+	/* -webkit-appearance: inherit; */
+	/* -webkit-font-smoothing: inherit; */
+	/* -webkit-writing-mode: inherit; */
+	/* word-spacing: 0; */
+	/* border: 0 solid #000; */
+	/* -moz-appearance: inherit; */
+	/* -moz-osx-font-smoothing: inherit; */
+	/* -moz-user-select: inherit; */
+	/* overflow-clip-box: inherit; */
+	/* padding-block-end: 0; */
+	/* padding-block-start: 0; */
+	/* padding-inline-end: 0; */
+	/* padding-inline-start: 0; */
+	/* white-space: normal; */
+	/* overflow: visible; */
+	/* zoom: inherit; */
+/* } */
 
-[type=email], [type=password], [type=text], select, textarea {
-	background-color: transparent;
-	background-image: none;
-	border: 0 solid #000;
-	box-sizing: inherit;
-	display: inline-block;
-	color: inherit;
+/* [type=email], [type=password], [type=text], select, textarea { */
+	/* background-color: transparent; */
+	/* background-image: none; */
+	/* border: 0 solid #000; */
+	/* box-sizing: inherit; */
+	/* display: inline-block; */
+	/* color: inherit; */
+	/* vertical-align: middle; */
+	/* font-style: inherit; */
+	/* font-variant-ligatures: inherit; */
+	/* font-variant-caps: inherit; */
+	/* font-variant-numeric: inherit; */
+	/* font-variant-east-asian: inherit; */
+	/* font-weight: inherit; */
+	/* font-stretch: inherit; */
+	/* font-size: 100%; */
+	/* line-height: inherit; */
+	/* margin: 0; */
+	/* padding: 0; */
+	/* -webkit-appearance: none; */
+/* } */
+
+select {
 	vertical-align: middle;
-	font-style: inherit;
-	font-variant-ligatures: inherit;
-	font-variant-caps: inherit;
-	font-variant-numeric: inherit;
-	font-variant-east-asian: inherit;
-	font-weight: inherit;
-	font-stretch: inherit;
-	font-size: 100%;
-	line-height: inherit;
-	margin: 0;
-	padding: 0;
+	background-image: none;
 	-webkit-appearance: none;
 }
 
@@ -156,7 +164,8 @@ ul {
 	margin: initial;
 }
 
-button {
+/* button { */
+.button {
 	position: relative;
 	font-size: inherit;
 }
@@ -190,7 +199,8 @@ a, a:active, a:hover, a:link, a:visited {
 	color: inherit;
 }
 
-button {
+/* button { */
+.button {
 	white-space: nowrap;
 }
 

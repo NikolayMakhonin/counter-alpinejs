@@ -6,8 +6,22 @@ https://console.firebase.google.com/u/1/project/counter-f4e44/database/counter-f
 {
   "rules": {
     "counter": {
-      "sessions": {
-        "$uid": {
+      "$uid": {
+        "options": {
+          "timer": {
+            "time": {
+              ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= 24 * 60 * 60 * 1000",
+            },
+            "interval": {
+              ".validate": "newData.isNumber() && newData.val() > 0 && newData.val() <= 24 * 60 * 60 * 1000",
+            },
+			"$other": {
+			  ".read": false,
+			  ".write": false,
+			}
+          }
+        },
+        "sessions": {
           ".read": "auth !== null && auth.uid === $uid",
           ".write": "auth !== null && auth.uid === $uid",
           "$sessionId": {
@@ -32,11 +46,11 @@ https://console.firebase.google.com/u/1/project/counter-f4e44/database/counter-f
               ".write": false,
             }
           }
+        },
+        "$other": {
+          ".read": false,
+          ".write": false,
         }
-      },
-      "$other": {
-        ".read": false,
-        ".write": false,
       }
     },
     "$other": {

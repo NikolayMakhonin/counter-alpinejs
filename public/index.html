@@ -186,10 +186,6 @@
 	
 				console.log('Firebase SDK loaded with: ' + features.join(', '))
 	
-				// see: https://github.com/firebase/firebaseui-web
-				// see: https://firebaseopensource.com/projects/firebase/firebaseui-web/
-				// see: https://howtofirebase.com/firebase-authentication-for-web-d58aad62cf6d
-	
 				// firebase.auth().onAuthStateChanged(user => { });
 				// firebase.database().ref('/path/to/ref').on('value', snapshot => { });
 				// firebase.firestore().doc('/foo/bar').get().then(() => { });
@@ -226,10 +222,20 @@
 					db: null,
 					ui: null,
 					signIn: function(refs) {
+						// see: https://github.com/firebase/firebaseui-web
+						// see: https://firebaseopensource.com/projects/firebase/firebaseui-web/
+						// see: https://howtofirebase.com/firebase-authentication-for-web-d58aad62cf6d
 						this.ui.start(refs['firebase.authPage'], {
 							signInFlow: 'popup',
 							signInOptions: [
-								firebase.auth.GoogleAuthProvider.PROVIDER_ID
+								firebaseui.auth.AnonymousAuthProvider.PROVIDER_ID,
+								firebase.auth.EmailAuthProvider.PROVIDER_ID,
+								firebase.auth.GoogleAuthProvider.PROVIDER_ID, 
+								firebase.auth.FacebookAuthProvider.PROVIDER_ID, // https://developers.facebook.com/
+								// firebase.auth.TwitterAuthProvider.PROVIDER_ID, // https://developer.twitter.com/en/apps
+								firebase.auth.GithubAuthProvider.PROVIDER_ID,
+								// 'apple.com', // 99$
+								// 'microsoft.com', // ?? $
 							],
 						})
 					},
@@ -242,16 +248,16 @@
 				},
 				timer: {
 					time: 120 * 1000,
-						interval: 2 * 1000,
-						timeRemaining: 120 * 1000,
-						intervalRemaining: 2 * 1000,
-						started: false,
-						soundEnabled: false,
-						vibrateEnabled: false,
-						blinkEnabled: true,
-						isBlink: false,
-						onIntervalEnd: false,
-						_sound: function () {
+					interval: 2 * 1000,
+					timeRemaining: 120 * 1000,
+					intervalRemaining: 2 * 1000,
+					started: false,
+					soundEnabled: false,
+					vibrateEnabled: false,
+					blinkEnabled: true,
+					isBlink: false,
+					onIntervalEnd: false,
+					_sound: function () {
 						if (this.soundEnabled) {
 							beep(100, 440, 80)
 						}
@@ -507,30 +513,12 @@
 					var state = JSON.parse(localStorage.getItem('state') || '{}')
 					this.nightMode = state.nightMode
 					if (state.timer) {
-						this.timer.time = state.timer.time
-						this.timer.interval = state.timer.interval
+						// this.timer.time = state.timer.time
+						// this.timer.interval = state.timer.interval
 						this.timer.soundEnabled = state.timer.soundEnabled
 						this.timer.vibrateEnabled = state.timer.vibrateEnabled
 						this.timer.blinkEnabled = state.timer.blinkEnabled
 					}
-
-					this.$watch('nightMode', function() { _this.saveState() })
-					this.$watch('timer.time', function() { _this.saveState() })
-					this.$watch('timer.interval', function() { _this.saveState() })
-					this.$watch('timer.soundEnabled', function() { _this.saveState() })
-					this.$watch('timer.vibrateEnabled', function() { _this.saveState() })
-					this.$watch('timer.blinkEnabled', function() { _this.saveState() })
-					this.$watch('timer.started', function (started) {
-						_this.counter.newSession()
-						if (!_this.timer.started) {
-							_this.counter.reportPage = 0
-						}
-					})
-					this.$watch('timer.onIntervalEnd', function (onIntervalEnd) {
-						if (onIntervalEnd) {
-							_this.counter.addValue(_this.firebase.db, _this.firebase.user.uid)
-						}
-					})
 					
 					// region Firebase Auth
 					
@@ -552,8 +540,18 @@
 							
 							if (user) {
 								_this.firebase.db.ref('counter/' + _this.firebase.user.uid + '/sessions')
-									.on('value', function(sessions) {
-										_this.counter.sessions = sessions.val()
+									.on('value', function(value) {
+										_this.counter.sessions = value.val()
+									})
+								_this.firebase.db.ref('counter/' + _this.firebase.user.uid + '/options')
+									.on('value', function(value) {
+										var options = value.val()
+										if (options && options.timer && options.timer.time) {
+											_this.timer.time = options.timer.time
+										}
+										if (options && options.timer && options.timer.interval) {
+											_this.timer.interval = options.timer.interval
+										}
 									})
 							}
 						})
@@ -561,6 +559,28 @@
 					this.firebase.db = this.firebase.app.database()
 					
 					// endregion
+
+					this.$watch('nightMode', function() { _this.saveState() })
+					this.$watch('timer.time', function(value) {
+						_this.firebase.db.ref('counter/' + uid + '/options/timer/time').set(value)
+					})
+					this.$watch('timer.interval', function(value) {
+						_this.firebase.db.ref('counter/' + uid + '/options/timer/interval').set(value)
+					})
+					this.$watch('timer.soundEnabled', function() { _this.saveState() })
+					this.$watch('timer.vibrateEnabled', function() { _this.saveState() })
+					this.$watch('timer.blinkEnabled', function() { _this.saveState() })
+					this.$watch('timer.started', function (started) {
+						_this.counter.newSession()
+						if (!_this.timer.started) {
+							_this.counter.reportPage = 0
+						}
+					})
+					this.$watch('timer.onIntervalEnd', function (onIntervalEnd) {
+						if (onIntervalEnd) {
+							_this.counter.addValue(_this.firebase.db, _this.firebase.user.uid)
+						}
+					})
 
 					return function() {
 						setTimeout(function() {
@@ -592,7 +612,7 @@
 			:class="{ collapsed: page !== 'auth'}"
 			></div>
 		<div
-			class="absolute inset-0 flex flex-col p-0.5"
+			class="app absolute inset-0 flex flex-col p-0.5"
 			:class="{ collapsed: page !== 'counter'}"
 			>
 			<div class="counter__header flex">
@@ -678,18 +698,20 @@
 					x-text="timeToString(timer.intervalRemaining)"
 				></div>
 				<select
-					class="flex-1 m-1 h-12 px-1.5 py-1 border border-black content-center"
+					class="flex-1 m-1 h-12 px-1.5 py-1 border border-black content-center disabled-opacity"
 					x-model="timer.time"
 					:class="{'collapsed': timer.started}"
+					:disabled="!firebase.user"
 				>
 					<template x-for="value in [60, 120, 180, 240, 300, 600, 900, 1200, 1500, 1800, 2400, 3600, 5400, 7200, 14400, 10800, 21600, 25200, 28800, 32400, 36000, 39600, 43200, 46800, 50400, 54000, 57600]">
 						<option :value="value * 1000" x-text="timeToString(value * 1000)"></option>
 					</template>
 				</select>
 				<select
-					class="flex-1 m-1 h-12 px-1.5 py-1 border border-black content-center"
+					class="flex-1 m-1 h-12 px-1.5 py-1 border border-black content-center disabled-opacity"
 					x-model="timer.interval"
 					:class="{'collapsed': timer.started}"
+					:disabled="!firebase.user"
 				>
 					<template x-for="value in [1, 2, 3, 4, 5, 10, 15, 20, 30, 40, 60, 120, 180, 240, 300, 600, 900, 1200, 1500, 1800, 2400, 3600, 5400, 7200]">
 						<option :value="value * 1000" x-text="timeToString(value * 1000)"></option>
