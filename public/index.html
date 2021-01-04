@@ -90,7 +90,7 @@
 
 	<!-- endregion -->
 
-	<script defer src="js/common/service-worker-register.js"></script>
+	<!-- <script defer src="js/common/service-worker-register.js"></script> -->
 
 	<!-- region Firebase -->
 
@@ -799,19 +799,19 @@
 		</button>
 	</div>
 	
-	<!-- <script> -->
-		<!-- if ("serviceWorker" in navigator) { -->
-			<!-- window.addEventListener("load", function() { -->
-				<!-- navigator.serviceWorker -->
-					<!-- .register("js/common/service-worker.js") -->
-					<!-- .then(function(res) { -->
-						<!-- console.log("service worker registered") -->
-					<!-- }) -->
-					<!-- .catch(function(err) { -->
-						<!-- console.log("service worker not registered", err) -->
-					<!-- }) -->
-			<!-- }) -->
-		<!-- } -->
-	<!-- </script> -->
+	<script>
+		if ("serviceWorker" in navigator) {
+			window.addEventListener("load", function() {
+				navigator.serviceWorker
+					.register("service-worker.js")
+					.then(function(res) {
+						console.log("service worker registered")
+					})
+					.catch(function(err) {
+						console.log("service worker not registered", err)
+					})
+			})
+		}
+	</script>
 </body>
 </html>
