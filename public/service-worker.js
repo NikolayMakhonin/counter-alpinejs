@@ -6,6 +6,7 @@ var ASSETS = "cache".concat(timestamp);
 
 // use: dir /s/b > list.txt
 const assets = [
+	"/",
 	"/__/firebase/8.2.1/firebase-app.js",
 	"/__/firebase/8.2.1/firebase-auth.js",
 	"/__/firebase/8.2.1/firebase-database.js",
@@ -17,6 +18,9 @@ const assets = [
 	"/__/firebase/8.2.1/firebase-remote-config.js",
 	"/__/firebase/8.2.1/firebase-performance.js",
 	"/__/firebase/init.js",
+	"/__/firebase/init.json",
+	"/__/firebase/init.js?useEmulator=true",
+	"/__/firebase/init.json?useEmulator=true",
 	"/favicon.ico",
 	"/index.html",
 	"/manifest.json",

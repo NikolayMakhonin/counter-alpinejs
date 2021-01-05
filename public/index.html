@@ -110,7 +110,7 @@
 	  initialize the SDK after all desired features are loaded, set useEmulator to false
 	  to avoid connecting the SDK to running emulators.
 	-->
-	<script defer src="/__/firebase/init.js?useEmulator=true"></script>
+	<!-- <script defer src="/__/firebase/init.js?useEmulator=true"></script> -->
 
 	<!-- region Firebase UI -->
 	
@@ -125,7 +125,7 @@
 	<script src="lib/alpine.min.js" defer></script>
 
 	<script src="js/common/helpers.js"></script>
-	<script src="lib/NoSleep.min.js?v=1"></script>
+	<script src="lib/NoSleep.min.js"></script>
 
 	<link rel="stylesheet" href="styles/common/reset.css">
 	<link rel="stylesheet" href="styles/common/helpers.css">
@@ -168,38 +168,54 @@
 	
 	<script>
 		function firebaseInit() {
-			try {
-				var app = firebase.app();
-				var features = [
-					'auth',
-					'database',
-					'firestore',
-					'functions',
-					'messaging',
-					'storage',
-					'analytics',
-					'remoteConfig',
-					'performance',
-				].filter(function(feature) {
-					typeof app[feature] === 'function'
+			// initialize the SDK after all desired features are loaded, set useEmulator to false
+			// to avoid connecting the SDK to running emulators.
+			return fetch('/__/firebase/init.json?useEmulator=true')
+				.then(function(response) {
+					return response.json()
 				})
-	
-				console.log('Firebase SDK loaded with: ' + features.join(', '))
-	
-				// firebase.auth().onAuthStateChanged(user => { });
-				// firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-				// firebase.firestore().doc('/foo/bar').get().then(() => { });
-				// firebase.functions().httpsCallable('yourFunction')().then(() => { });
-				// firebase.messaging().requestPermission().then(() => { });
-				// firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-				// firebase.analytics(); // call to activate
-				// firebase.analytics().logEvent('tutorial_completed');
-				// firebase.performance(); // call to activate
-				
-				return app
-			} catch (e) {
-				console.error(e)
-			}
+				.then(function(json) {
+					json.persistence = true
+					return firebase.initializeApp(json)
+				})
+				.then(function() {
+					var app = firebase.app();
+					var features = [
+						'auth',
+						'database',
+						'firestore',
+						'functions',
+						'messaging',
+						'storage',
+						'analytics',
+						'remoteConfig',
+						'performance',
+					].filter(function(feature) {
+						typeof app[feature] === 'function'
+					})
+		
+					console.log('Firebase SDK loaded with: ' + features.join(', '))
+		
+					// firebase.auth().onAuthStateChanged(user => { });
+					// firebase.database().ref('/path/to/ref').on('value', snapshot => { });
+					// firebase.firestore().doc('/foo/bar').get().then(() => { });
+					// firebase.functions().httpsCallable('yourFunction')().then(() => { });
+					// firebase.messaging().requestPermission().then(() => { });
+					// firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
+					// firebase.analytics(); // call to activate
+					// firebase.analytics().logEvent('tutorial_completed');
+					// firebase.performance(); // call to activate
+					
+					return app
+						.auth()
+						.setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+						.then(function(auth) {
+							return app
+						})
+				})
+				.catch(function(e) {
+					console.error(e)
+				})
 		}
 		
 		function dateToString(date) {
@@ -241,8 +257,7 @@
 					},
 					signOut: function() {
 						return this
-							.app
-							.auth()
+							.auth
 							.signOut()
 					},
 				},
@@ -519,45 +534,50 @@
 						this.timer.vibrateEnabled = state.timer.vibrateEnabled
 						this.timer.blinkEnabled = state.timer.blinkEnabled
 					}
-					
+
 					// region Firebase Auth
 					
-					this.firebase.app = firebaseInit()
-					this.firebase.ui = new firebaseui.auth.AuthUI(this.firebase.app.auth())
+					document.addEventListener("DOMContentLoaded", function(event){
+						firebaseInit()
+							.then(function(app) {
+								_this.firebase.app = app
+								_this.firebase.auth = app.auth()
+								_this.firebase.ui = new firebaseui.auth.AuthUI(_this.firebase.auth)
 
-					this.firebase.app
-						.auth()
-						.onAuthStateChanged(function(user) {
-							// user is undefined if no user signed in
-							_this.firebase.user = user
-							console.log('FireBase Auth User: ', user)
-							
-							if (user && _this.page === 'auth') {
-								_this.page = 'counter'
-							}
+								_this.firebase.auth
+									.onAuthStateChanged(function(user) {
+										// user is undefined if no user signed in
+										_this.firebase.user = user
+										console.log('FireBase Auth User: ', user)
+										
+										if (user && _this.page === 'auth') {
+											_this.page = 'counter'
+										}
 
-							_this.firebase.db.ref().off()
-							
-							if (user) {
-								_this.firebase.db.ref('counter/' + _this.firebase.user.uid + '/sessions')
-									.on('value', function(value) {
-										_this.counter.sessions = value.val()
-									})
-								_this.firebase.db.ref('counter/' + _this.firebase.user.uid + '/options')
-									.on('value', function(value) {
-										var options = value.val()
-										if (options && options.timer && options.timer.time) {
-											_this.timer.time = options.timer.time
+										_this.firebase.db.ref().off()
+										
+										if (user) {
+											_this.firebase.db.ref('counter/' + _this.firebase.user.uid + '/sessions')
+												.on('value', function(value) {
+													_this.counter.sessions = value.val()
+												})
+											_this.firebase.db.ref('counter/' + _this.firebase.user.uid + '/options')
+												.on('value', function(value) {
+													var options = value.val()
+													if (options && options.timer && options.timer.time) {
+														_this.timer.time = options.timer.time
+													}
+													if (options && options.timer && options.timer.interval) {
+														_this.timer.interval = options.timer.interval
+													}
+												})
 										}
-										if (options && options.timer && options.timer.interval) {
-											_this.timer.interval = options.timer.interval
-										}
 									})
-							}
-						})
-					
-					this.firebase.db = this.firebase.app.database()
-					
+								
+								_this.firebase.db = _this.firebase.app.database()
+							})
+					});						
+
 					// endregion
 
 					this.$watch('nightMode', function() { _this.saveState() })
@@ -586,7 +606,7 @@
 						}
 					})
 
-					return function() {
+					return function() {					
 						setTimeout(function() {
 							_this.timer.started = !_this.timer.started
 							_this.timer.started = !_this.timer.started
