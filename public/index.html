@@ -248,7 +248,7 @@
 								firebase.auth.EmailAuthProvider.PROVIDER_ID,
 								firebase.auth.GoogleAuthProvider.PROVIDER_ID, 
 								firebase.auth.FacebookAuthProvider.PROVIDER_ID, // https://developers.facebook.com/
-								// firebase.auth.TwitterAuthProvider.PROVIDER_ID, // https://developer.twitter.com/en/apps
+								firebase.auth.TwitterAuthProvider.PROVIDER_ID, // https://developer.twitter.com/en/apps
 								firebase.auth.GithubAuthProvider.PROVIDER_ID,
 								// 'apple.com', // 99$
 								// 'microsoft.com', // ?? $
@@ -758,10 +758,10 @@
 			</div>
 			<div class="counter__content flex-auto slider flex flex-col">
 				<div
-					class="flex-auto log flex flex-col m-1 px-1.5 py-0.5 border border-black relative overflow-y-auto"
-					x-on:click="if (!timer.started) { counter.nextPage() }"
+					class="flex-auto log flex flex-col m-1 px-1.5 py-0.5 border border-black relative overflow-y-auto font-mono select-text"
+					x-on:click="counter.nextPage()"
 				>
-					<div class="absolute flex-auto whitespace-pre" x-text="timer.started ? counter.sessionReport() : counter.sessionsReport()"></div>
+					<div class="absolute flex-auto whitespace-pre" style="font-size: 96%" x-text="counter.sessionsReport()"></div>
 				</div>
 			</div>
 		</div>
