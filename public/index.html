@@ -114,7 +114,7 @@
 
 	<!-- region Firebase UI -->
 	
-	<script src="lib/firebase-ui-auth.js"></script>
+	<script defer src="lib/firebase-ui-auth.js"></script>
 	<link rel="stylesheet" href="lib/firebase-ui-auth.css" />
 
 	<!-- endregion -->
@@ -122,7 +122,7 @@
 	<!-- endregion -->
 
 	<!-- Alpine.js framework. Docs: https://github.com/alpinejs/alpine -->
-	<script src="lib/alpine.min.js" defer></script>
+	<script defer src="lib/alpine.min.js"></script>
 
 	<script src="js/common/helpers.js"></script>
 	<script src="lib/NoSleep.min.js"></script>
@@ -712,15 +712,29 @@
 					</div>
 				</label>
 				<div
-					class="flex-1 m-1 h-12 px-1.5 py-1 border border-black bg-gray-200 font-bold content-center"
+					class="flex-1 m-1 h-12 px-1.5 py-1 border border-black font-bold relative"
 					:class="{'collapsed': !timer.started}"
-					x-text="timeToString(timer.timeRemaining)"
-				></div>
+				>
+					<div
+						class="absolute inset-y-0 left-0 bg-gray-400"
+						:style="'width: ' + (timer.timeRemaining / timer.time * 100) + '%'"
+						></div>
+					<div
+						class="absolute inset-0 content-center"
+						x-text="timeToString(timer.timeRemaining)"></div>
+				</div>
 				<div
-					class="flex-1 m-1 h-12 px-1.5 py-1 border border-black bg-gray-200 font-bold content-center"
+					class="flex-1 m-1 h-12 px-1.5 py-1 border border-black font-bold relative"
 					:class="{'collapsed': !timer.started}"
-					x-text="timeToString(timer.intervalRemaining)"
-				></div>
+				>
+					<div
+						class="absolute inset-y-0 left-0 bg-gray-400"
+						:style="'width: ' + (timer.intervalRemaining / timer.interval * 100) + '%'"
+						></div>
+					<div
+						class="absolute inset-0 content-center"
+						x-text="timeToString(timer.intervalRemaining)"></div>
+				</div>
 				<select
 					class="flex-1 m-1 h-12 px-1.5 py-1 border border-black content-center disabled-opacity"
 					x-model="timer.time"
